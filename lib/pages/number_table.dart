@@ -12,12 +12,6 @@ class NumberTable extends StatefulWidget {
 }
 
 class _NumberTableState extends State<NumberTable> {
-  String text = '';
-  late Widget _numberTableWidget;
-  final TextEditingController _intputController = TextEditingController();
-  final List<bool> _numberTableCheckbox = [
-    for (var i = 0; i < _numberTableList.length; i++) false
-  ];
   static const List<Map<String, dynamic>> _numberTableList = [
     {
       'id': 1,
@@ -61,6 +55,11 @@ class _NumberTableState extends State<NumberTable> {
       'third': ['48', '49', '50', '51', '52', '53', '54', '55'],
       'fourth': ['56', '57', '58', '59', '60', '61', '62', '63'],
     },
+  ];
+  late Widget _numberTableWidget;
+  String _outText = '';
+  List<bool> _numberTableCheckbox = [
+    for (var i = 0; i < _numberTableList.length; i++) false
   ];
 
   // Number Table
@@ -118,25 +117,23 @@ class _NumberTableState extends State<NumberTable> {
                 TextStyle(color: Theme.of(context).scaffoldBackgroundColor)));
   }
 
-  void _submitNumber() {
-    setState(() {
-      try {
-        if (_intputController.text.isNotEmpty) {
-          // Formula to get hidden number.
-          text = (int.parse(_intputController.text) - 4).toString();
-        } else if (_intputController.text.isEmpty) {
-          text = '';
-        }
-      } catch (e) {
-        text = "ERROR: Invalid number try again.";
+  void _submitNumberTable() {
+    // Formula to get hidden number.
+    int sum = 0;
+    for (var i = 0; i < _numberTableList.length; i++) {
+      if (_numberTableCheckbox[i] == true) {
+        sum += int.tryParse(_numberTableList[i]['first'][0])!;
       }
-    });
+    }
+    setState(() => _outText = sum.toString());
   }
 
-  @override
-  void dispose() {
-    _intputController.dispose();
-    super.dispose();
+  void _resetNumberTable() {
+    _numberTableCheckbox = [
+      for (var i = 0; i < _numberTableList.length; i++) false
+    ];
+    _numberTableWidget = _numberTable(_numberTableList[0]);
+    setState(() => _outText = '');
   }
 
   @override
@@ -176,7 +173,7 @@ class _NumberTableState extends State<NumberTable> {
                 children: [
                   MaterialButton(
                       color: Colors.blue,
-                      onPressed: _submitNumber,
+                      onPressed: _submitNumberTable,
                       elevation: 10,
                       child: Text('Submit',
                           style: TextStyle(
@@ -184,12 +181,9 @@ class _NumberTableState extends State<NumberTable> {
                                   Theme.of(context).scaffoldBackgroundColor))),
                   MaterialButton(
                       color: Colors.blue,
-                      onPressed: () => setState(() {
-                            text = '';
-                            _intputController.clear();
-                          }),
+                      onPressed: _resetNumberTable,
                       elevation: 10,
-                      child: Text('Clear',
+                      child: Text('Reset',
                           style: TextStyle(
                               color:
                                   Theme.of(context).scaffoldBackgroundColor))),
@@ -212,7 +206,7 @@ class _NumberTableState extends State<NumberTable> {
                   ),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Text(text,
+                child: Text(_outText,
                     style: TextStyle(fontFamily: 'Consolas', fontSize: 19)),
               ),
             ]),
