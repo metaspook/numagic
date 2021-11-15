@@ -149,7 +149,7 @@ class _NumberTableState extends State<NumberTable> {
   Widget build(BuildContext context) {
     // final size = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: AppBar(title: Text(widget.title)),
+        appBar: AppBar(),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: SingleChildScrollView(

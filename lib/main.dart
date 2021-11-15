@@ -10,15 +10,29 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: true,
       title: 'NuMagic',
       theme: ThemeData(
+        // appBarTheme: AppBarTheme(
+        //   color: theme.appMainColor,
+        //   titleTextStyle: const TextStyle(
+        //     color: Colors.white,
+        //     fontSize: 20,
+        //     fontWeight: FontWeight.bold,
+        //   ),
+        // ),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(title: 'Game Collection'),
+      home: const HomePage(),
     );
   }
 }
+
+// Container(
+ //   width: MediaQuery.of(context).size.width,
+ //  height: MediaQuery.of(context).padding.top,
