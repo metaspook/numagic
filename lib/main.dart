@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:numagic/pages/hidden_number_1.dart';
-import 'package:numagic/pages/home.dart';
-import 'package:numagic/pages/hidden_digit_1.dart';
-import 'package:numagic/pages/number_table.dart';
+import 'package:velocity_x/velocity_x.dart';
+import 'package:numagic/router.dart';
 
 void main() {
+  Vx.setPathUrlStrategy();
   runApp(const MyApp());
 }
 
@@ -13,22 +12,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: true,
       title: 'NuMagic',
-      theme: ThemeData(
-        // appBarTheme: AppBarTheme(
-        //   color: theme.appMainColor,
-        //   titleTextStyle: const TextStyle(
-        //     color: Colors.white,
-        //     fontSize: 20,
-        //     fontWeight: FontWeight.bold,
-        //   ),
-        // ),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        primarySwatch: Colors.blue,
-      ),
-      home: const HomePage(),
+      routeInformationParser: VxInformationParser(),
+      routerDelegate: navigator,
     );
   }
 }

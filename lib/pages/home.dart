@@ -1,13 +1,9 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:numagic/pages/hidden_digit_1.dart';
-import 'package:numagic/pages/number_table.dart';
+import 'package:numagic/router.dart';
 import 'package:numagic/widgets/appbar.dart';
 import 'package:numagic/widgets/drawer.dart';
 import 'package:numagic/widgets/items.dart';
+import 'package:numagic/main.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -22,64 +18,83 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         extendBodyBehindAppBar: true,
         // backgroundColor: ThemeData.dark().primaryColor,
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.grey[700]),
-          title: Text(
-            'NuMagic',
-            style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[700]),
-          ),
-          backgroundColor: Colors.black.withOpacity(0.1),
-          elevation: 10,
-          centerTitle: true,
-          // systemOverlayStyle: SystemUiOverlayStyle.light,
-          flexibleSpace: ClipRect(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
-              child: Container(
-                // color: Colors.white.withOpacity(0.1),
-                color: Colors.white.withOpacity(0.1),
-              ),
-            ),
-          ),
-        ),
-        drawer: DrawerWidget(),
+        appBar: const AppBarWidget(title: 'Magic Collection'),
+        drawer: const DrawerWidget(),
         body: LayoutBuilder(builder: (context, constraints) {
-          List<dynamic> gameList = [
-            [
-              'Number Table',
-              () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NumberTable(
-                      title: 'Number Table',
-                    ),
-                  ))
-            ],
-            [
-              'Hidden Digit',
-              () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HiddenDigit1(
-                      title: 'Hidden Digit 1',
-                    ),
-                  ))
-            ],
-            ['Hidden Number', () {}],
-            ['Magic game 3', () {}],
-            ['Magic game 4', () {}],
-            ['Magic game 5', () {}],
+          List<Map<String, dynamic>> itemList = [
+            {
+              "title": "Number Table",
+              "function": () =>
+                  navigator.routeManager.push(Uri.parse("/number_table"))
+            },
+            {
+              "title": "Hidden Digit",
+              "function": () =>
+                  navigator.routeManager.push(Uri.parse("/hidden_digit"))
+            },
+            {
+              "title": "Hidden Number",
+              "function": () =>
+                  navigator.routeManager.push(Uri.parse("/hidden_number"))
+            },
+            {
+              "title": "Food Table",
+              "function": () =>
+                  navigator.routeManager.push(Uri.parse("/food_table"))
+            },
+            {
+              "title": "Place Holder",
+              "function": () =>
+                  navigator.routeManager.push(Uri.parse("/hidden_digit"))
+            },
+            {
+              "title": "Place Holder",
+              "function": () =>
+                  navigator.routeManager.push(Uri.parse("/hidden_digit"))
+            },
+            {
+              "title": "Place Holder",
+              "function": () =>
+                  navigator.routeManager.push(Uri.parse("/hidden_digit"))
+            },
+            {
+              "title": "Place Holder",
+              "function": () =>
+                  navigator.routeManager.push(Uri.parse("/hidden_digit"))
+            },
+            {
+              "title": "Place Holder",
+              "function": () =>
+                  navigator.routeManager.push(Uri.parse("/hidden_digit"))
+            },
+            {
+              "title": "Place Holder",
+              "function": () =>
+                  navigator.routeManager.push(Uri.parse("/hidden_digit"))
+            },
+            {
+              "title": "Place Holder",
+              "function": () =>
+                  navigator.routeManager.push(Uri.parse("/hidden_digit"))
+            },
+            {
+              "title": "Place Holder",
+              "function": () =>
+                  navigator.routeManager.push(Uri.parse("/hidden_digit"))
+            },
+            {
+              "title": "Place Holder",
+              "function": () =>
+                  navigator.routeManager.push(Uri.parse("/hidden_digit"))
+            }
           ];
           return GridView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 65),
-            itemCount: gameList.length,
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 65),
+            itemCount: itemList.length,
             itemBuilder: (context, index) => ItemWidget(
               index: index,
-              title: gameList[index][0],
-              func: gameList[index][1],
+              title: itemList[index]["title"],
+              function: itemList[index]["function"],
             ),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: constraints.maxWidth > 1024

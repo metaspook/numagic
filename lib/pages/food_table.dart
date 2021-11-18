@@ -4,17 +4,18 @@
 import 'package:flutter/material.dart';
 import 'package:numagic/widgets/appbar.dart';
 
-class NumberTable extends StatefulWidget {
-  const NumberTable({Key? key}) : super(key: key);
+class FoodTable extends StatefulWidget {
+  const FoodTable({Key? key}) : super(key: key);
 
   @override
-  State<NumberTable> createState() => _NumberTableState();
+  State<FoodTable> createState() => _FoodTableState();
 }
 
-class _NumberTableState extends State<NumberTable> {
+class _FoodTableState extends State<FoodTable> {
   // Fetch content from the json file
   // Tried to but couldn't get it to work
   // couldn't set value on List<Map<String, dynamic>> _numberTableList
+
   static const List<Map<String, dynamic>> _numberTableList = [
     {
       "id": 1,
@@ -149,7 +150,7 @@ class _NumberTableState extends State<NumberTable> {
   Widget build(BuildContext context) {
     // final size = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: AppBarWidget(title: 'Number Table'),
+        appBar: AppBarWidget(title: 'Food Table'),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: SingleChildScrollView(
@@ -183,6 +184,8 @@ RULES:
                 ),
               ),
               SizedBox(height: 15),
+              Image.asset('assets/images/clock_00.png'),
+              Image.network('assets/images/apples-150x150.png'),
               _numberTableWidget,
               SizedBox(height: 5),
               Row(

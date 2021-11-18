@@ -1,0 +1,60 @@
+Apple
+Biscuit
+Boiled Egg
+Bread
+Breadsticks
+Breakfast Sandwich
+Burger
+Butter
+Candies
+Cheese
+Cheeseburger
+Chips
+Chocolate
+Chocolate Milk
+Coconut Milk
+Coffee
+Cookies
+Croissant
+Donut
+Fish
+French bread
+Fried chicken
+Fries
+Fruit Juice
+Fruits
+Grape
+Green Tea
+Honey
+Hot chocolate
+Hot dog
+Ice cream
+Jam
+Kebab
+Lemonade
+Meat
+Milk
+Milk shake
+Muffin
+Noodle
+Omelet
+Orange juice
+Pancake
+Pasta
+Pizza
+Rice
+Roast chicken
+Roll
+Salad
+Sandwich
+Sausage
+Seafood
+Soft drink
+Soup
+Steak
+Taco
+Tea
+Vegetables
+Water
+Watermelon
+Yogurt
