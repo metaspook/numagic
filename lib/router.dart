@@ -3,7 +3,8 @@ import 'package:numagic/pages/home.dart';
 import 'package:numagic/pages/hidden_digit_1.dart';
 import 'package:numagic/pages/hidden_number_1.dart';
 import 'package:numagic/pages/number_table.dart';
-import 'package:velocity_x/velocity_x.dart'; // Named Routes.
+import 'package:velocity_x/velocity_x.dart';
+// Named Routes.
 
 final VxNavigator navigator = VxNavigator(routes: {
   "/": (uri, param) => VxRoutePage(
@@ -19,7 +20,7 @@ final VxNavigator navigator = VxNavigator(routes: {
   "/food_table": (uri, param) => VxRoutePage(
         fullscreenDialog: true,
         pageName: "food_table",
-        child: const FoodTable(),
+        child: const FoodTablePage(),
       ),
   "/hidden_digit": (uri, param) => VxRoutePage(
         fullscreenDialog: true,

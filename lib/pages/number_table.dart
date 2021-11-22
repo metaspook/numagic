@@ -18,7 +18,7 @@ class _NumberTableState extends State<NumberTable> {
   static const List<Map<String, dynamic>> _numberTableList = [
     {
       "id": 1,
-      "first": [11, 3, 5, 7, 9, 11, 13, 15],
+      "first": [1, 3, 5, 7, 9, 11, 13, 15],
       "second": [17, 19, 21, 23, 25, 27, 29, 31],
       "third": [33, 35, 37, 39, 41, 43, 45, 47],
       "fourth": [49, 51, 53, 55, 57, 59, 61, 63]

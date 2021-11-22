@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:numagic/pages/food_table.dart';
 import 'package:numagic/router.dart';
 import 'package:numagic/widgets/appbar.dart';
 import 'package:numagic/widgets/drawer.dart';
@@ -15,6 +17,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    var platform = Theme.of(context).platform;
     return Scaffold(
         extendBodyBehindAppBar: true,
         // backgroundColor: ThemeData.dark().primaryColor,
@@ -40,6 +43,7 @@ class _HomePageState extends State<HomePage> {
             {
               "title": "Food Table",
               "function": () =>
+                  // showCupertinoModalPopup(context: context, builder: (context) => const FoodTable())
                   navigator.routeManager.push(Uri.parse("/food_table"))
             },
             {
@@ -88,8 +92,14 @@ class _HomePageState extends State<HomePage> {
                   navigator.routeManager.push(Uri.parse("/hidden_digit"))
             }
           ];
+
           return GridView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 65),
+            padding: EdgeInsets.symmetric(
+                horizontal: 5,
+                vertical: platform == TargetPlatform.android ||
+                        platform == TargetPlatform.iOS
+                    ? 130
+                    : 65),
             itemCount: itemList.length,
             itemBuilder: (context, index) => ItemWidget(
               index: index,

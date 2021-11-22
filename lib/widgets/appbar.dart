@@ -12,12 +12,12 @@ class AppBarWidget extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      iconTheme: IconThemeData(color: Colors.grey[700]),
+      iconTheme: IconThemeData(color: Colors.grey[850]),
       title: Text(title,
           style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,
-              color: Colors.grey[800])),
+              color: Colors.grey[850])),
       backgroundColor: Colors.black.withOpacity(0.1),
       elevation: 10,
       centerTitle: true,
