@@ -1,8 +1,10 @@
+import 'package:numagic/pages/carosal.dart';
 import 'package:numagic/pages/food_table.dart';
 import 'package:numagic/pages/home.dart';
 import 'package:numagic/pages/hidden_digit_1.dart';
 import 'package:numagic/pages/hidden_number_1.dart';
 import 'package:numagic/pages/number_table.dart';
+import 'package:numagic/pages/sliver_appbar.dart';
 import 'package:velocity_x/velocity_x.dart';
 // Named Routes.
 
@@ -31,5 +33,15 @@ final VxNavigator navigator = VxNavigator(routes: {
         fullscreenDialog: true,
         pageName: "hidden_number",
         child: const HiddenNumber1(),
+      ),
+  "/sliver_appbar": (uri, param) => VxRoutePage(
+        fullscreenDialog: true,
+        pageName: "sliver_appbar",
+        child: SliverAppbar(),
+      ),
+  "/carosal": (uri, param) => VxRoutePage(
+        // fullscreenDialog: true,
+        pageName: "sliver_appbar",
+        child: Carosal(),
       ),
 });

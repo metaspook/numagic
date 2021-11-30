@@ -43,13 +43,14 @@ class _HomePageState extends State<HomePage> {
             {
               "title": "Food Table",
               "function": () =>
-                  // showCupertinoModalPopup(context: context, builder: (context) => const FoodTable())
+                  // showCupertinoModalPopup(
+                  //     context: context, builder: (context) => const FoodTablePage())
                   navigator.routeManager.push(Uri.parse("/food_table"))
             },
             {
-              "title": "Place Holder",
+              "title": "Carosal",
               "function": () =>
-                  navigator.routeManager.push(Uri.parse("/hidden_digit"))
+                  navigator.routeManager.push(Uri.parse("/carosal"))
             },
             {
               "title": "Place Holder",

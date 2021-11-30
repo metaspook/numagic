@@ -3,7 +3,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:numagic/router.dart';
 
 void main() {
-  Vx.setPathUrlStrategy();
+  // Vx.setPathUrlStrategy();
   runApp(const MyApp());
 }
 

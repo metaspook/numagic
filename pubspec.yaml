@@ -36,6 +36,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   carousel_slider: ^4.0.0
   velocity_x: ^3.3.0
+  page_indicator: ^0.4.1
+  card_swiper: ^1.0.4
 
 dev_dependencies:
   flutter_test:

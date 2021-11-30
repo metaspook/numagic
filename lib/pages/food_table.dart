@@ -1,9 +1,11 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-// addition, subtraction, multiplication and division
-
+import 'dart:math';
 import 'dart:ui';
+import 'package:card_swiper/card_swiper.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:numagic/widgets/appbar.dart';
+import 'package:numagic/widgets/custom_divider.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class FoodTablePage extends StatefulWidget {
   const FoodTablePage({Key? key}) : super(key: key);
@@ -13,245 +15,384 @@ class FoodTablePage extends StatefulWidget {
 }
 
 class _FoodTablePageState extends State<FoodTablePage> {
-  // Fetch content from the json file
-  // Tried to but couldn't get it to work
-  // couldn't set value on List<Map<String, dynamic>> _numberTableList
+  final GlobalKey _key = GlobalKey();
+  final Color color =
+      Colors.primaries[Random().nextInt(Colors.primaries.length)];
+  ScrollController _scrollController = ScrollController();
+  late String _tableTitle;
+  var _tableIndex = 0;
+  bool _scrollStatus = false;
+  bool _showFloatingButton = true;
+  bool _gameStarted = false;
+  String? _outImage, _outName;
+  List<bool> _tableCheckbox = [
+    for (var i = 0; i < _tableList.length; i++) false
+  ];
 
-  // var _foodTableListLength = _foodTableList.length;
-  late List<List<int>> _currentTableList;
+  bool _scrollBody = false;
+
+  void _showDialog([String? title, String? image, String? name]) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return
+              // Container(
+              //   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              //   decoration: BoxDecoration(
+              //     border: Border.all(color: Colors.black, width: 5),
+              //     borderRadius: BorderRadius.circular(10),
+              //   ),
+              //   child:
+              AlertDialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                  // elevation: 15,
+                  backgroundColor: Theme.of(context)
+                      .scaffoldBackgroundColor
+                      .withOpacity(0.75),
+                  title: Column(
+                    children: [
+                      Text(
+                        title!,
+                        style: const TextStyle(
+                          fontSize: 25,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 5),
+                      CustomDivider(),
+                    ],
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (image != null)
+                        Image.asset(
+                          image,
+                          // fit: BoxFit.scaleDown,
+                          // height: 150,
+                          // width: 150,
+                        ),
+                      Text(
+                        name!,
+                        style: const TextStyle(
+                            fontSize: 32, fontWeight: FontWeight.w500),
+                      )
+                    ],
+                  ),
+                  actions: [
+                GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey, width: 1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Text('OK', style: TextStyle(fontSize: 18)),
+                  ),
+                ),
+              ]
+                  // ),
+                  );
+        });
+  }
+
+  void _setCheckbox([value]) => setState(() =>
+      _tableCheckbox[_tableIndex] = value ?? !_tableCheckbox[_tableIndex]);
+
+  void _submitTable() {
+    int sum = 0;
+    for (var i = 0; i < _tableList.length; i++) {
+      if (_tableCheckbox[i] == true) {
+        sum += _tableList[i][0][5];
+      }
+    }
+    if (sum == 0 || sum > _foodList.length) {
+      _outImage = null;
+      _outName = null;
+      _showDialog(
+        'Secret Food',
+        null,
+        '⚠️⚠️⚠️⚠️\nInvalid table selection.',
+      );
+    } else {
+      _outImage = _foodList[sum - 1]['image'];
+      _outName = _foodList[sum - 1]['name'];
+      _showDialog(
+        'Secret Food',
+        _outImage!,
+        _outName!,
+      );
+      // setState(() => _showFloatingButton = true);
+    }
+  }
+
+  void _resetTable() => setState(() {
+        _tableCheckbox = [for (var i = 0; i < _tableList.length; i++) false];
+        _tableIndex = 0;
+        _outImage = null;
+        _outName = null;
+        _showFloatingButton = true;
+        _gameStarted = false;
+        _scrollBottom();
+      });
+
+  void _scrollListener() {
+    if (isShrink != _scrollStatus) setState(() => _scrollStatus = isShrink);
+  }
+
+  void _scrollTop() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.elasticOut);
+    }
+  }
+
+  void _scrollBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(_scrollController.position.minScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.elasticOut);
+    }
+  }
+
+  bool get isShrink =>
+      _scrollController.hasClients &&
+      _scrollController.offset > 130 - kToolbarHeight;
 
   @override
   void initState() {
-    _currentTableList = _foodTableList[0];
+    _scrollController.addListener(_scrollListener);
     super.initState();
   }
 
   @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final Color color = Colors.primaries[9 % Colors.primaries.length];
-    var platform = Theme.of(context).platform;
-
-    // foodTableListLength -= 5;
-    // print(_foodTableList[0][0][0]);
+    // print(_scrollController.offset);
     final size = MediaQuery.of(context).size;
+    var platform = Theme.of(context).platform;
+    _tableTitle = 'Table No. ${_tableIndex + 1}';
     return Scaffold(
-      appBar: AppBarWidget(title: 'Food Table'),
-      extendBodyBehindAppBar: true,
-
+      // appBar: const AppBarWidget(title: 'Food Table'),
+      // extendBodyBehindAppBar: true,
       // backgroundColor: Colors.transparent,
-      body:
-          // BackdropFilter(
-          //     filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
-          //     child:
-          SingleChildScrollView(
-        padding: EdgeInsets.symmetric(
-            horizontal: 5,
-            vertical: platform == TargetPlatform.android ||
-                    platform == TargetPlatform.iOS
-                ? 130
-                : 65),
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              // MaterialButton(
-              //     onPressed: () => print(_foodTableListLength == 0
-              //         ? 0
-              //         : _foodTableListLength -= 5),
-              //     child: Text('Add Food')),
-              SizedBox(height: 15),
-              Container(
-                padding: EdgeInsets.all(5),
-                width: 500,
-                height: 105,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  border: Border.all(
-                    color: Colors.grey,
-                    // width: 5,
+      body: CustomScrollView(
+        physics: _gameStarted
+            ? const BouncingScrollPhysics()
+            : const NeverScrollableScrollPhysics(),
+        controller: _scrollController,
+        slivers: <Widget>[
+          SliverAppBar(
+            backgroundColor: color,
+            title: _gameStarted && isShrink
+                ? GestureDetector(
+                    onTap: _setCheckbox,
+                    child: Row(children: [
+                      Checkbox(
+                          activeColor: Colors.black.withOpacity(0.65),
+                          checkColor: color,
+                          value: _tableCheckbox[_tableIndex],
+                          onChanged: (value) => _setCheckbox(value)),
+                      Text('Table No. ${_tableIndex + 1}'),
+                    ]),
+                  )
+                : Text('Rules:'),
+            centerTitle: true,
+            expandedHeight: kToolbarHeight * 3,
+            // elevation: 10,
+            // floating: false,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: const EdgeInsets.only(
+                top: kToolbarHeight * 2.60,
+              ),
+              centerTitle: true,
+              title: Padding(
+                padding: const EdgeInsets.all(5),
+                child: Container(
+                  padding: const EdgeInsets.all(5),
+                  width: 500,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.white54,
+                      // width: 5,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  """
-RULES:
-* Hold a secret number from 1 to 63.
-* Select the tables below containing
-  the secret number you're holding.
-* Press Submit to get the secret number.
+                  child: const Text(
+                    """
+ * Hold a secret food from any of the.
+   tables below.
+ * Select the tables below containing
+   the secret food you're hiding.
+ * Press Submit to get the secret food.
 """,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontFamily: 'Consolas',
-                    fontWeight: FontWeight.bold,
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontFamily: 'Consolas',
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-              SizedBox(height: 15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                // crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      Checkbox(value: false, onChanged: (value) => value
-                          //       _numberTableCheckbox[data['id'] - 1] = value!;
-                          //       _numberTableWidget =
-                          //           _numberTable(_numberTableList[data['id'] - 1]);
-                          // }),
+            ),
+          ),
+          SliverFillRemaining(
+            // hasScrollBody: false,
+            child: _gameStarted
+                ? Swiper(
+                    onIndexChanged: (index) => setState(() {
+                      _tableIndex = index;
+                      _scrollTop();
+                    }),
+                    control: SwiperControl(size: 40, color: color),
+                    // pagination: const SwiperPagination(),
+                    itemCount: _tableList.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding:
+                            const EdgeInsets.only(top: 10, left: 5, right: 5),
+                        child: Center(
+                          child: SizedBox(
+                            height: size.height * 0.70,
+                            child: FoodTable(
+                                itemList: _foodList,
+                                itemTable: _tableList[index]),
                           ),
-                      Text('Table no. 1',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
-                    ],
+                        ),
+                      );
+                    },
+                  )
+                : Padding(
+                    padding: const EdgeInsets.only(top: 10, left: 5, right: 5),
+                    child: Stack(
+                      children: [
+                        FoodTable(
+                          itemList: _foodList,
+                          itemTable: _tableList[_tableIndex],
+                        ),
+                        BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 1.5, sigmaY: 1.5),
+                          child:
+                              SizedBox(width: size.width, height: size.height),
+                        )
+                      ],
+                    ),
                   ),
-                  SizedBox(width: 15),
-                  Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: color.withOpacity(0.5),
-                              blurRadius: 5,
-                              spreadRadius: 2.5,
-                            ),
-                          ],
-                          color: color,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        width: 80,
-                        height: 35,
-                        // color: color.withOpacity(0.5),
-                        child: MaterialButton(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          onPressed: () => setState(
-                            () => {},
-                          ),
-                          elevation: 2.5,
-                          child: Icon(Icons.arrow_back_ios_new, color: color),
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Container(
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: color.withOpacity(0.5),
-                              blurRadius: 5,
-                              spreadRadius: 2.5,
-                            ),
-                          ],
-                          color: color,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        width: 80,
-                        height: 35,
-                        // color: color.withOpacity(0.5),
-                        child: MaterialButton(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          onPressed: () => setState(
-                            () => {},
-                          ),
-                          elevation: 2.5,
-                          child: Icon(Icons.arrow_forward_ios, color: color),
-                        ),
-                      ),
-                    ],
+          ),
+        ],
+      ),
+      floatingActionButton: _showFloatingButton
+          ? Align(
+              widthFactor: 2.05,
+              heightFactor: 8,
+              // alignment: Alignment.center,
+              child: Container(
+                width: 175,
+                height: 80,
+                decoration: BoxDecoration(
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      color: color,
+                      blurRadius: 25,
+                      spreadRadius: 2.5,
+                    ),
+                  ],
+                ),
+                child: FloatingActionButton.extended(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                ],
+                  onPressed: () {
+                    _gameStarted = true;
+                    _showFloatingButton = false;
+                    _scrollTop();
+                  },
+                  backgroundColor: color.withOpacity(0.75),
+                  elevation: 0,
+                  highlightElevation: 0,
+                  enableFeedback: true,
+                  label: const Text('Start',
+                      style:
+                          TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
+                  icon: const Icon(Icons.forward_rounded, size: 50),
+                ),
               ),
-              SizedBox(height: 8),
-              FoodTable(itemList: _foodList, tableList: _currentTableList),
-              SizedBox(height: 20),
-              Row(
+            )
+          : Align(
+              widthFactor: 0.940,
+              heightFactor: 5,
+              // widthFactor: size.width * 0.00240,
+              // alignment: Alignment.bottomCenter,
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: color.withOpacity(0.5),
-                            blurRadius: 10,
-                            spreadRadius: 5,
-                          ),
-                        ],
-                        color: color,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      width: 90,
-                      height: 40,
-                      // color: color.withOpacity(0.5),
-                      child: MaterialButton(
+                    decoration: BoxDecoration(
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
                           color: color,
-                          onPressed: () {},
-                          elevation: 10,
-                          child: Text('Submit',
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .scaffoldBackgroundColor)))),
+                          blurRadius: 25,
+                          spreadRadius: 2.5,
+                        ),
+                      ],
+                    ),
+                    child: FloatingActionButton.extended(
+                      onPressed: _submitTable,
+                      backgroundColor: color.withOpacity(0.75),
+                      elevation: 0,
+                      highlightElevation: 0,
+                      enableFeedback: true,
+                      label:
+                          const Text('Submit', style: TextStyle(fontSize: 16)),
+                      icon: const Icon(Icons.check, size: 18),
+                    ),
+                  ),
                   Container(
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: color.withOpacity(0.5),
-                            blurRadius: 10,
-                            spreadRadius: 5,
-                          ),
-                        ],
-                        color: color,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      width: 90,
-                      height: 40,
-                      // color: color.withOpacity(0.5),
-                      child: MaterialButton(
+                    decoration: BoxDecoration(
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
                           color: color,
-                          onPressed: () {},
-                          elevation: 10,
-                          child: Text('Reset',
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .scaffoldBackgroundColor)))),
+                          blurRadius: 25,
+                          spreadRadius: 2.5,
+                        ),
+                      ],
+                    ),
+                    child: FloatingActionButton.extended(
+                      onPressed: _resetTable,
+                      backgroundColor: color.withOpacity(0.75),
+                      elevation: 0,
+                      highlightElevation: 0,
+                      enableFeedback: true,
+                      label:
+                          const Text('Reset', style: TextStyle(fontSize: 16)),
+                      icon: const Icon(Icons.refresh_outlined, size: 18),
+                    ),
+                  ),
                 ],
               ),
-              SizedBox(height: 20),
-              Center(
-                  child: Text('Secret Food',
-                      style: TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold))),
-              SizedBox(height: 10),
-              Container(
-                padding: EdgeInsets.all(20),
-                width: 400,
-                height: 100,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey,
-                    width: 5,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Center(
-                  child: Text('_outText',
-                      style: TextStyle(fontFamily: 'Consolas', fontSize: 50)),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      // ),
+            ),
     );
   }
 }
 
-const _foodTableList = <List<List<int>>>[
+const _tableList = <List<List<int>>>[
   [
     [3, 5, 7, 9, 11, 1],
     [13, 15, 17, 19, 21, 23],
     [25, 27, 29, 31, 33, 35],
     [37, 39, 41, 43, 45, 47],
-    [44, 51, 53, 55, 57, 59]
+    [49, 51, 53, 55, 57, 59]
   ],
   [
     [5, 6, 7, 13, 12, 4],
@@ -299,7 +440,7 @@ const List<Map<String, dynamic>> _foodList = [
   },
   {
     "id": 3,
-    "name": "Boiled Egg",
+    "name": "Boiled\nEgg",
     "image": "assets/images/foods/Boiled-egg-150x150.png"
   },
   {"id": 4, "name": "Bread", "image": "assets/images/foods/Bread-150x150.png"},
@@ -310,7 +451,7 @@ const List<Map<String, dynamic>> _foodList = [
   },
   {
     "id": 6,
-    "name": "Breakfast Sandwich",
+    "name": "Breakfast\nSandwich",
     "image": "assets/images/foods/breakfast-sandwich-150x150.png"
   },
   {
@@ -346,12 +487,12 @@ const List<Map<String, dynamic>> _foodList = [
   },
   {
     "id": 14,
-    "name": "Chocolate-Milk",
+    "name": "Chocolate\nMilk",
     "image": "assets/images/foods/chocolate-milk-150x150.png"
   },
   {
     "id": 15,
-    "name": "Coconut-Milk",
+    "name": "Coconut\nMilk",
     "image": "assets/images/foods/coconut-milk-1-150x150.png"
   },
   {
@@ -377,18 +518,18 @@ const List<Map<String, dynamic>> _foodList = [
   {"id": 20, "name": "Fish", "image": "assets/images/foods/fish-150x150.png"},
   {
     "id": 21,
-    "name": "French-bread",
+    "name": "French\nbread",
     "image": "assets/images/foods/French-bread-150x150.png"
   },
   {
     "id": 22,
-    "name": "Fried-chicken",
+    "name": "Fried\nchicken",
     "image": "assets/images/foods/fried-chicken-150x150.png"
   },
   {"id": 23, "name": "Fries", "image": "assets/images/foods/Fries-150x150.png"},
   {
     "id": 24,
-    "name": "Fruit-Juice",
+    "name": "Fruit\nJuice",
     "image": "assets/images/foods/fruit-juice-150x150.png"
   },
   {
@@ -403,23 +544,23 @@ const List<Map<String, dynamic>> _foodList = [
   },
   {
     "id": 27,
-    "name": "Green-Tea",
+    "name": "Green\nTea",
     "image": "assets/images/foods/green-tea-150x150.png"
   },
   {"id": 28, "name": "Honey", "image": "assets/images/foods/Honey-150x150.png"},
   {
     "id": 29,
-    "name": "Hot-chocolate",
+    "name": "Hot\nchocolate",
     "image": "assets/images/foods/hot-chocolate2-150x150.png"
   },
   {
     "id": 30,
-    "name": "Hot-dog",
+    "name": "Hot\ndog",
     "image": "assets/images/foods/Hot-Dog-150x150.png"
   },
   {
     "id": 31,
-    "name": "Ice-cream",
+    "name": "Ice\ncream",
     "image": "assets/images/foods/Ice-cream-150x150.png"
   },
   {"id": 32, "name": "Jam", "image": "assets/images/foods/Jam-150x150.png"},
@@ -433,7 +574,7 @@ const List<Map<String, dynamic>> _foodList = [
   {"id": 36, "name": "Milk", "image": "assets/images/foods/Milk-150x150.png"},
   {
     "id": 37,
-    "name": "Milk-shake",
+    "name": "Milk\nshake",
     "image": "assets/images/foods/milkshake1-150x150.png"
   },
   {
@@ -453,7 +594,7 @@ const List<Map<String, dynamic>> _foodList = [
   },
   {
     "id": 41,
-    "name": "Orange-juice",
+    "name": "Orange\njuice",
     "image": "assets/images/foods/orange-juice-1-150x150.png"
   },
   {
@@ -470,7 +611,7 @@ const List<Map<String, dynamic>> _foodList = [
   {"id": 45, "name": "Rice", "image": "assets/images/foods/Rice-150x150.png"},
   {
     "id": 46,
-    "name": "Roast-chicken",
+    "name": "Roast\nchicken",
     "image": "assets/images/foods/Roast-chicken-150x150.png"
   },
   {"id": 47, "name": "Roll", "image": "assets/images/foods/roll-150x150.png"},
@@ -492,7 +633,7 @@ const List<Map<String, dynamic>> _foodList = [
   },
   {
     "id": 52,
-    "name": "Soft-drink",
+    "name": "Soft\ndrink",
     "image": "assets/images/foods/soft-drink-150x150.png"
   },
   {"id": 53, "name": "Soup", "image": "assets/images/foods/Soup-150x150.png"},
@@ -522,14 +663,16 @@ const List<Map<String, dynamic>> _foodList = [
 ];
 
 class FoodTable extends StatelessWidget {
-  const FoodTable({Key? key, required this.itemList, required this.tableList})
+  FoodTable({Key? key, required this.itemList, required this.itemTable})
       : super(key: key);
   final List<Map<String, dynamic>> itemList;
-  final List<List<int>> tableList;
+  final List<List<int>> itemTable;
 
+  final Color color =
+      Colors.primaries[Random().nextInt(Colors.primaries.length)];
   Padding _foodTableCell({required String name, required String image}) {
     return Padding(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: Column(
         children: <Widget>[
           Image.asset(
@@ -538,7 +681,9 @@ class FoodTable extends StatelessWidget {
           ),
           Text(
             name,
-            style: TextStyle(
+            style: const TextStyle(
+              color: Colors.black,
+              // color: Colors.white60,
               fontWeight: FontWeight.bold,
               // fontFamily: 'Consolas',
               fontSize: 12,
@@ -554,15 +699,19 @@ class FoodTable extends StatelessWidget {
     return Table(
         // defaultColumnWidth: FixedColumnWidth(size.width * 0.15),
         border: TableBorder.all(
-            color: Colors.black, style: BorderStyle.solid, width: 2),
+          color: Colors.black,
+          // color: Colors.white38,
+          style: BorderStyle.solid,
+          width: 2,
+        ),
         children: <TableRow>[
-          for (var i = 0; i < tableList.length; i++)
+          for (var i = 0; i < itemTable.length; i++)
             TableRow(children: <Widget>[
               // Text('data'),
-              for (var j = 0; j < tableList[i].length; j++)
+              for (var j = 0; j < itemTable[i].length; j++)
                 _foodTableCell(
-                    image: itemList[tableList[i][j] - 1]['image'],
-                    name: itemList[tableList[i][j] - 1]['name']),
+                    image: itemList[itemTable[i][j] - 1]['image'],
+                    name: itemList[itemTable[i][j] - 1]['name']),
             ]),
         ]);
   }
