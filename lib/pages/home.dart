@@ -56,50 +56,15 @@ class _HomePageState extends State<HomePage> {
               "title": "Place Holder",
               "function": () =>
                   navigator.routeManager.push(Uri.parse("/hidden_digit"))
-            },
-            {
-              "title": "Place Holder",
-              "function": () =>
-                  navigator.routeManager.push(Uri.parse("/hidden_digit"))
-            },
-            {
-              "title": "Place Holder",
-              "function": () =>
-                  navigator.routeManager.push(Uri.parse("/hidden_digit"))
-            },
-            {
-              "title": "Place Holder",
-              "function": () =>
-                  navigator.routeManager.push(Uri.parse("/hidden_digit"))
-            },
-            {
-              "title": "Place Holder",
-              "function": () =>
-                  navigator.routeManager.push(Uri.parse("/hidden_digit"))
-            },
-            {
-              "title": "Place Holder",
-              "function": () =>
-                  navigator.routeManager.push(Uri.parse("/hidden_digit"))
-            },
-            {
-              "title": "Place Holder",
-              "function": () =>
-                  navigator.routeManager.push(Uri.parse("/hidden_digit"))
-            },
-            {
-              "title": "Place Holder",
-              "function": () =>
-                  navigator.routeManager.push(Uri.parse("/hidden_digit"))
             }
           ];
 
           return GridView.builder(
             padding: EdgeInsets.symmetric(
                 horizontal: 5,
-                vertical: platform == TargetPlatform.android ||
-                        platform == TargetPlatform.iOS
-                    ? 130
+                vertical: platform == TargetPlatform.iOS ||
+                        platform == TargetPlatform.android
+                    ? 125
                     : 65),
             itemCount: itemList.length,
             itemBuilder: (context, index) => ItemWidget(
@@ -114,8 +79,8 @@ class _HomePageState extends State<HomePage> {
                       ? 3
                       : constraints.maxWidth > 500
                           ? 2
-                          : 1,
-              childAspectRatio: 5,
+                          : 2,
+              // childAspectRatio: 5,
             ),
           );
         }));

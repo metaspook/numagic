@@ -16,7 +16,7 @@ class ItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color color = Colors.primaries[index % Colors.primaries.length];
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(7.5),
       child: Container(
         decoration: BoxDecoration(
           boxShadow: [
@@ -36,7 +36,8 @@ class ItemWidget extends StatelessWidget {
           onPressed: () => function(),
           // tileColor: color.withOpacity(0.3),
           child: Text(title,
-              style: const TextStyle(fontSize: 15, color: Colors.white)),
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 25, color: Colors.white)),
         ),
       ),
     );

@@ -1,11 +1,8 @@
 import 'dart:math';
 import 'dart:ui';
 import 'package:card_swiper/card_swiper.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:numagic/widgets/appbar.dart';
 import 'package:numagic/widgets/custom_divider.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class FoodTablePage extends StatefulWidget {
   const FoodTablePage({Key? key}) : super(key: key);
@@ -15,11 +12,11 @@ class FoodTablePage extends StatefulWidget {
 }
 
 class _FoodTablePageState extends State<FoodTablePage> {
-  final GlobalKey _key = GlobalKey();
+  // final GlobalKey _key = GlobalKey();
   final Color color =
       Colors.primaries[Random().nextInt(Colors.primaries.length)];
-  ScrollController _scrollController = ScrollController();
-  late String _tableTitle;
+  final ScrollController _scrollController = ScrollController();
+  // late String _tableTitle;
   var _tableIndex = 0;
   bool _scrollStatus = false;
   bool _showFloatingButton = true;
@@ -28,8 +25,6 @@ class _FoodTablePageState extends State<FoodTablePage> {
   List<bool> _tableCheckbox = [
     for (var i = 0; i < _tableList.length; i++) false
   ];
-
-  bool _scrollBody = false;
 
   void _showDialog([String? title, String? image, String? name]) {
     showDialog(
@@ -179,8 +174,7 @@ class _FoodTablePageState extends State<FoodTablePage> {
   Widget build(BuildContext context) {
     // print(_scrollController.offset);
     final size = MediaQuery.of(context).size;
-    var platform = Theme.of(context).platform;
-    _tableTitle = 'Table No. ${_tableIndex + 1}';
+    // var platform = Theme.of(context).platform;
     return Scaffold(
       // appBar: const AppBarWidget(title: 'Food Table'),
       // extendBodyBehindAppBar: true,
@@ -207,21 +201,23 @@ class _FoodTablePageState extends State<FoodTablePage> {
                   )
                 : Text('Rules:'),
             centerTitle: true,
-            expandedHeight: kToolbarHeight * 3,
+            expandedHeight: 235 - kToolbarHeight,
+            // expandedHeight: 0.22 * (size.height + kToolbarHeight),
             // elevation: 10,
             // floating: false,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              titlePadding: const EdgeInsets.only(
-                top: kToolbarHeight * 2.60,
+              titlePadding: EdgeInsets.only(
+                top: 0.16 * size.height,
+                // top: 0.150 * (size.height + kToolbarHeight),
               ),
               centerTitle: true,
               title: Padding(
                 padding: const EdgeInsets.all(5),
                 child: Container(
                   padding: const EdgeInsets.all(5),
-                  width: 500,
-                  height: 70,
+                  width: size.width * 0.70,
+                  height: size.height * 0.090,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Colors.white54,
@@ -259,12 +255,14 @@ class _FoodTablePageState extends State<FoodTablePage> {
                     // pagination: const SwiperPagination(),
                     itemCount: _tableList.length,
                     itemBuilder: (context, index) {
-                      return Padding(
-                        padding:
-                            const EdgeInsets.only(top: 10, left: 5, right: 5),
-                        child: Center(
-                          child: SizedBox(
-                            height: size.height * 0.70,
+                      return Center(
+                        child: SizedBox(
+                          // height: 0.72 * size.height,
+                          height: 630 - kToolbarHeight,
+                          // height: 0.75 * size.height,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 10, left: 5, right: 5),
                             child: FoodTable(
                                 itemList: _foodList,
                                 itemTable: _tableList[index]),
