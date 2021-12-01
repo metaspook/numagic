@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
+import 'package:numagic/mods.dart';
 import 'package:numagic/widgets/custom_divider.dart';
 
 class FoodTablePage extends StatefulWidget {
@@ -13,8 +14,9 @@ class FoodTablePage extends StatefulWidget {
 
 class _FoodTablePageState extends State<FoodTablePage> {
   // final GlobalKey _key = GlobalKey();
-  final Color color =
-      Colors.primaries[Random().nextInt(Colors.primaries.length)];
+
+  final Color color = modColors.elementAt(Random().nextInt(modColors.length));
+  // Colors.primaries[Random().nextInt(Colors.primaries.length)];
   final ScrollController _scrollController = ScrollController();
   // late String _tableTitle;
   var _tableIndex = 0;
@@ -108,15 +110,15 @@ class _FoodTablePageState extends State<FoodTablePage> {
       _outImage = null;
       _outName = null;
       _showDialog(
-        'Secret Food',
+        '⚠️ Secret Food ⚠️',
         null,
-        '⚠️⚠️⚠️⚠️\nInvalid table selection.',
+        'Invalid table selection.',
       );
     } else {
       _outImage = _foodList[sum - 1]['image'];
       _outName = _foodList[sum - 1]['name'];
       _showDialog(
-        'Secret Food',
+        '🪄 Secret Food 🪄',
         _outImage!,
         _outName!,
       );
@@ -178,117 +180,121 @@ class _FoodTablePageState extends State<FoodTablePage> {
     return Scaffold(
       // appBar: const AppBarWidget(title: 'Food Table'),
       // extendBodyBehindAppBar: true,
-      // backgroundColor: Colors.transparent,
-      body: CustomScrollView(
-        physics: _gameStarted
-            ? const BouncingScrollPhysics()
-            : const NeverScrollableScrollPhysics(),
-        controller: _scrollController,
-        slivers: <Widget>[
-          SliverAppBar(
-            backgroundColor: color,
-            title: _gameStarted && isShrink
-                ? GestureDetector(
-                    onTap: _setCheckbox,
-                    child: Row(children: [
-                      Checkbox(
-                          activeColor: Colors.black.withOpacity(0.65),
-                          checkColor: color,
-                          value: _tableCheckbox[_tableIndex],
-                          onChanged: (value) => _setCheckbox(value)),
-                      Text('Table No. ${_tableIndex + 1}'),
-                    ]),
-                  )
-                : Text('Rules:'),
-            centerTitle: true,
-            expandedHeight: 235 - kToolbarHeight,
-            // expandedHeight: 0.22 * (size.height + kToolbarHeight),
-            // elevation: 10,
-            // floating: false,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              titlePadding: EdgeInsets.only(
-                top: 0.16 * size.height,
-                // top: 0.150 * (size.height + kToolbarHeight),
-              ),
+      backgroundColor: Colors.transparent,
+      body: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+        child: CustomScrollView(
+          physics: _gameStarted
+              ? const BouncingScrollPhysics()
+              : const NeverScrollableScrollPhysics(),
+          controller: _scrollController,
+          slivers: <Widget>[
+            SliverAppBar(
+              backgroundColor: color.withOpacity(0.75),
+              title: _gameStarted && isShrink
+                  ? GestureDetector(
+                      onTap: _setCheckbox,
+                      child: Row(children: [
+                        Checkbox(
+                            activeColor: Colors.black.withOpacity(0.65),
+                            checkColor: color,
+                            value: _tableCheckbox[_tableIndex],
+                            onChanged: (value) => _setCheckbox(value)),
+                        Text('Table No. ${_tableIndex + 1}'),
+                      ]),
+                    )
+                  : Text('Steps:'),
               centerTitle: true,
-              title: Padding(
-                padding: const EdgeInsets.all(5),
-                child: Container(
+              expandedHeight: 235 - kToolbarHeight,
+              // expandedHeight: 0.22 * (size.height + kToolbarHeight),
+              // elevation: 10,
+              // floating: false,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                titlePadding: EdgeInsets.only(
+                  top: 0.16 * size.height,
+                  // top: 0.150 * (size.height + kToolbarHeight),
+                ),
+                centerTitle: true,
+                title: Padding(
                   padding: const EdgeInsets.all(5),
-                  width: size.width * 0.70,
-                  height: size.height * 0.090,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.white54,
-                      // width: 5,
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    width: size.width * 0.70,
+                    height: size.height * 0.090,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.white54,
+                        // width: 5,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Text(
-                    """
- * Hold a secret food from any of the.
-   tables below.
- * Select the tables below containing
-   the secret food you're hiding.
- * Press Submit to get the secret food.
+                    child: const Text(
+                      """
+ 1. Keep secret a food from any of the
+    6 tables below.
+ 2. Select all the tables containing
+    the food you kept secret.
+ 3. Submit, I'll show you the MAGIC 🪄
 """,
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontFamily: 'Consolas',
-                      fontWeight: FontWeight.bold,
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontFamily: 'Consolas',
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-          SliverFillRemaining(
-            // hasScrollBody: false,
-            child: _gameStarted
-                ? Swiper(
-                    onIndexChanged: (index) => setState(() {
-                      _tableIndex = index;
-                      _scrollTop();
-                    }),
-                    control: SwiperControl(size: 40, color: color),
-                    // pagination: const SwiperPagination(),
-                    itemCount: _tableList.length,
-                    itemBuilder: (context, index) {
-                      return Center(
-                        child: SizedBox(
-                          // height: 0.72 * size.height,
-                          height: 630 - kToolbarHeight,
-                          // height: 0.75 * size.height,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 10, left: 5, right: 5),
-                            child: FoodTable(
-                                itemList: _foodList,
-                                itemTable: _tableList[index]),
+            SliverFillRemaining(
+              // hasScrollBody: false,
+              child: _gameStarted
+                  ? Swiper(
+                      onIndexChanged: (index) => setState(() {
+                        _tableIndex = index;
+                        _scrollTop();
+                      }),
+                      control: SwiperControl(size: 40, color: color),
+                      // pagination: const SwiperPagination(),
+                      itemCount: _tableList.length,
+                      itemBuilder: (context, index) {
+                        return Center(
+                          child: SizedBox(
+                            // height: 0.72 * size.height,
+                            height: 630 - kToolbarHeight,
+                            // height: 0.75 * size.height,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 10, left: 5, right: 5),
+                              child: FoodTable(
+                                  itemList: _foodList,
+                                  itemTable: _tableList[index]),
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  )
-                : Padding(
-                    padding: const EdgeInsets.only(top: 10, left: 5, right: 5),
-                    child: Stack(
-                      children: [
-                        FoodTable(
-                          itemList: _foodList,
-                          itemTable: _tableList[_tableIndex],
-                        ),
-                        BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 1.5, sigmaY: 1.5),
-                          child:
-                              SizedBox(width: size.width, height: size.height),
-                        )
-                      ],
+                        );
+                      },
+                    )
+                  : Padding(
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 5, right: 5),
+                      child: Stack(
+                        children: [
+                          FoodTable(
+                            itemList: _foodList,
+                            itemTable: _tableList[_tableIndex],
+                          ),
+                          BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 1.5, sigmaY: 1.5),
+                            child: SizedBox(
+                                width: size.width, height: size.height),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
       floatingActionButton: _showFloatingButton
           ? Align(
@@ -301,9 +307,9 @@ class _FoodTablePageState extends State<FoodTablePage> {
                 decoration: BoxDecoration(
                   boxShadow: <BoxShadow>[
                     BoxShadow(
-                      color: color,
-                      blurRadius: 25,
-                      spreadRadius: 2.5,
+                      color: color.withOpacity(0.75),
+                      blurRadius: 15,
+                      spreadRadius: 1.5,
                     ),
                   ],
                 ),
@@ -401,7 +407,7 @@ const _tableList = <List<List<int>>>[
   ],
   [
     [9, 10, 11, 12, 13, 8],
-    [14, 15, 20, 21, 22, 23],
+    [14, 15, 24, 25, 26, 27],
     [28, 29, 30, 31, 40, 41],
     [42, 43, 44, 45, 46, 47],
     [56, 57, 58, 59, 60, 13]
@@ -680,8 +686,8 @@ class FoodTable extends StatelessWidget {
           Text(
             name,
             style: const TextStyle(
-              color: Colors.black,
-              // color: Colors.white60,
+              // color: Colors.black,
+              color: Colors.white60,
               fontWeight: FontWeight.bold,
               // fontFamily: 'Consolas',
               fontSize: 12,
@@ -697,8 +703,8 @@ class FoodTable extends StatelessWidget {
     return Table(
         // defaultColumnWidth: FixedColumnWidth(size.width * 0.15),
         border: TableBorder.all(
-          color: Colors.black,
-          // color: Colors.white38,
+          // color: Colors.black,
+          color: Colors.white38,
           style: BorderStyle.solid,
           width: 2,
         ),

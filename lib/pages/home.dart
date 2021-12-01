@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:numagic/pages/food_table.dart';
+import 'package:numagic/pages/translucent.dart';
 import 'package:numagic/router.dart';
 import 'package:numagic/widgets/appbar.dart';
 import 'package:numagic/widgets/drawer.dart';
@@ -17,6 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     var platform = Theme.of(context).platform;
     return Scaffold(
         extendBodyBehindAppBar: true,
@@ -42,10 +44,9 @@ class _HomePageState extends State<HomePage> {
             },
             {
               "title": "Food Table",
-              "function": () =>
-                  // showCupertinoModalPopup(
-                  //     context: context, builder: (context) => const FoodTablePage())
-                  navigator.routeManager.push(Uri.parse("/food_table"))
+              "function": () => showCupertinoModalPopup(
+                  context: context, builder: (context) => const FoodTablePage())
+              // navigator.routeManager.push(Uri.parse("/food_table"))
             },
             {
               "title": "Carosal",
@@ -55,6 +56,7 @@ class _HomePageState extends State<HomePage> {
             {
               "title": "Place Holder",
               "function": () =>
+                  //showDialogX(context: context, size: size)
                   navigator.routeManager.push(Uri.parse("/hidden_digit"))
             }
           ];
