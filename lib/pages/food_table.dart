@@ -1,7 +1,11 @@
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:numagic/models/food_list.dart';
+import 'package:numagic/models/table_list.dart';
 import 'package:numagic/mods.dart';
 import 'package:numagic/widgets/custom_divider.dart';
 
@@ -13,6 +17,7 @@ class FoodTablePage extends StatefulWidget {
 }
 
 class _FoodTablePageState extends State<FoodTablePage> {
+  List _foodList2 = [];
   // final GlobalKey _key = GlobalKey();
 
   final Color color = modColors.elementAt(Random().nextInt(modColors.length));
@@ -25,7 +30,7 @@ class _FoodTablePageState extends State<FoodTablePage> {
   bool _gameStarted = false;
   String? _outImage, _outName;
   List<bool> _tableCheckbox = [
-    for (var i = 0; i < _tableList.length; i++) false
+    for (var i = 0; i < tableList.length; i++) false
   ];
 
   void _showDialog([String? title, String? image, String? name]) {
@@ -101,12 +106,12 @@ class _FoodTablePageState extends State<FoodTablePage> {
 
   void _submitTable() {
     int sum = 0;
-    for (var i = 0; i < _tableList.length; i++) {
+    for (var i = 0; i < tableList.length; i++) {
       if (_tableCheckbox[i] == true) {
-        sum += _tableList[i][0][5];
+        sum += tableList[i][0][5];
       }
     }
-    if (sum == 0 || sum > _foodList.length) {
+    if (sum == 0 || sum > _foodList2.length) {
       _outImage = null;
       _outName = null;
       _showDialog(
@@ -115,8 +120,8 @@ class _FoodTablePageState extends State<FoodTablePage> {
         'Invalid table selection.',
       );
     } else {
-      _outImage = _foodList[sum - 1]['image'];
-      _outName = _foodList[sum - 1]['name'];
+      _outImage = _foodList2[sum - 1]['image'];
+      _outName = _foodList2[sum - 1]['name'];
       _showDialog(
         '🪄 Secret Food 🪄',
         _outImage!,
@@ -127,7 +132,7 @@ class _FoodTablePageState extends State<FoodTablePage> {
   }
 
   void _resetTable() => setState(() {
-        _tableCheckbox = [for (var i = 0; i < _tableList.length; i++) false];
+        _tableCheckbox = [for (var i = 0; i < tableList.length; i++) false];
         _tableIndex = 0;
         _outImage = null;
         _outName = null;
@@ -163,6 +168,8 @@ class _FoodTablePageState extends State<FoodTablePage> {
   @override
   void initState() {
     _scrollController.addListener(_scrollListener);
+    // _readJson();
+
     super.initState();
   }
 
@@ -257,7 +264,7 @@ class _FoodTablePageState extends State<FoodTablePage> {
                       }),
                       control: SwiperControl(size: 40, color: color),
                       // pagination: const SwiperPagination(),
-                      itemCount: _tableList.length,
+                      itemCount: tableList.length,
                       itemBuilder: (context, index) {
                         return Center(
                           child: SizedBox(
@@ -267,9 +274,7 @@ class _FoodTablePageState extends State<FoodTablePage> {
                             child: Padding(
                               padding: const EdgeInsets.only(
                                   top: 10, left: 5, right: 5),
-                              child: FoodTable(
-                                  itemList: _foodList,
-                                  itemTable: _tableList[index]),
+                              child: FoodTable(tableList[index]),
                             ),
                           ),
                         );
@@ -280,10 +285,7 @@ class _FoodTablePageState extends State<FoodTablePage> {
                           const EdgeInsets.only(top: 10, left: 5, right: 5),
                       child: Stack(
                         children: [
-                          FoodTable(
-                            itemList: _foodList,
-                            itemTable: _tableList[_tableIndex],
-                          ),
+                          FoodTable(tableList[_tableIndex]),
                           BackdropFilter(
                             filter: ImageFilter.blur(sigmaX: 1.5, sigmaY: 1.5),
                             child: SizedBox(
@@ -390,286 +392,14 @@ class _FoodTablePageState extends State<FoodTablePage> {
   }
 }
 
-const _tableList = <List<List<int>>>[
-  [
-    [3, 5, 7, 9, 11, 1],
-    [13, 15, 17, 19, 21, 23],
-    [25, 27, 29, 31, 33, 35],
-    [37, 39, 41, 43, 45, 47],
-    [49, 51, 53, 55, 57, 59]
-  ],
-  [
-    [5, 6, 7, 13, 12, 4],
-    [14, 15, 20, 21, 22, 23],
-    [28, 29, 30, 31, 36, 37],
-    [38, 39, 44, 45, 46, 47],
-    [52, 53, 54, 55, 60, 13]
-  ],
-  [
-    [9, 10, 11, 12, 13, 8],
-    [14, 15, 24, 25, 26, 27],
-    [28, 29, 30, 31, 40, 41],
-    [42, 43, 44, 45, 46, 47],
-    [56, 57, 58, 59, 60, 13]
-  ],
-  [
-    [3, 6, 7, 10, 11, 2],
-    [14, 15, 18, 19, 22, 23],
-    [26, 27, 30, 31, 34, 35],
-    [38, 39, 42, 43, 46, 47],
-    [50, 51, 54, 55, 58, 59]
-  ],
-  [
-    [17, 18, 19, 20, 21, 16],
-    [22, 23, 24, 25, 26, 27],
-    [28, 29, 30, 31, 48, 49],
-    [50, 51, 52, 53, 54, 55],
-    [56, 57, 58, 59, 60, 31]
-  ],
-  [
-    [33, 34, 35, 36, 37, 32],
-    [38, 39, 40, 41, 42, 43],
-    [44, 45, 46, 55, 48, 49],
-    [50, 51, 52, 53, 54, 47],
-    [56, 57, 58, 59, 60, 46]
-  ]
-];
-
-const List<Map<String, dynamic>> _foodList = [
-  {"id": 1, "name": "Apple", "image": "assets/images/foods/Apple-150x150.png"},
-  {
-    "id": 2,
-    "name": "Biscuit",
-    "image": "assets/images/foods/biscuit-150x150.png"
-  },
-  {
-    "id": 3,
-    "name": "Boiled\nEgg",
-    "image": "assets/images/foods/Boiled-egg-150x150.png"
-  },
-  {"id": 4, "name": "Bread", "image": "assets/images/foods/Bread-150x150.png"},
-  {
-    "id": 5,
-    "name": "Breadsticks",
-    "image": "assets/images/foods/Breadsticks-150x150.png"
-  },
-  {
-    "id": 6,
-    "name": "Breakfast\nSandwich",
-    "image": "assets/images/foods/breakfast-sandwich-150x150.png"
-  },
-  {
-    "id": 7,
-    "name": "Burger",
-    "image": "assets/images/foods/burger-150x150.png"
-  },
-  {
-    "id": 8,
-    "name": "Butter",
-    "image": "assets/images/foods/Butter-150x150.png"
-  },
-  {
-    "id": 9,
-    "name": "Candies",
-    "image": "assets/images/foods/Candies-150x150.png"
-  },
-  {
-    "id": 10,
-    "name": "Cheese",
-    "image": "assets/images/foods/Cheese-150x150.png"
-  },
-  {
-    "id": 11,
-    "name": "Cheeseburger",
-    "image": "assets/images/foods/cheeseburger-150x150.png"
-  },
-  {"id": 12, "name": "Chips", "image": "assets/images/foods/chip-150x150.png"},
-  {
-    "id": 13,
-    "name": "Chocolate",
-    "image": "assets/images/foods/Chocolate-150x150.png"
-  },
-  {
-    "id": 14,
-    "name": "Chocolate\nMilk",
-    "image": "assets/images/foods/chocolate-milk-150x150.png"
-  },
-  {
-    "id": 15,
-    "name": "Coconut\nMilk",
-    "image": "assets/images/foods/coconut-milk-1-150x150.png"
-  },
-  {
-    "id": 16,
-    "name": "Coffee",
-    "image": "assets/images/foods/coffee2-150x150.png"
-  },
-  {
-    "id": 17,
-    "name": "Cookies",
-    "image": "assets/images/foods/Cookies-150x150.png"
-  },
-  {
-    "id": 18,
-    "name": "Croissant",
-    "image": "assets/images/foods/croissant-150x150.png"
-  },
-  {
-    "id": 19,
-    "name": "Donut",
-    "image": "assets/images/foods/donut-2-150x150.png"
-  },
-  {"id": 20, "name": "Fish", "image": "assets/images/foods/fish-150x150.png"},
-  {
-    "id": 21,
-    "name": "French\nbread",
-    "image": "assets/images/foods/French-bread-150x150.png"
-  },
-  {
-    "id": 22,
-    "name": "Fried\nchicken",
-    "image": "assets/images/foods/fried-chicken-150x150.png"
-  },
-  {"id": 23, "name": "Fries", "image": "assets/images/foods/Fries-150x150.png"},
-  {
-    "id": 24,
-    "name": "Fruit\nJuice",
-    "image": "assets/images/foods/fruit-juice-150x150.png"
-  },
-  {
-    "id": 25,
-    "name": "Fruits",
-    "image": "assets/images/foods/Fruits-150x150.png"
-  },
-  {
-    "id": 26,
-    "name": "Grape",
-    "image": "assets/images/foods/Grapes-150x150.png"
-  },
-  {
-    "id": 27,
-    "name": "Green\nTea",
-    "image": "assets/images/foods/green-tea-150x150.png"
-  },
-  {"id": 28, "name": "Honey", "image": "assets/images/foods/Honey-150x150.png"},
-  {
-    "id": 29,
-    "name": "Hot\nchocolate",
-    "image": "assets/images/foods/hot-chocolate2-150x150.png"
-  },
-  {
-    "id": 30,
-    "name": "Hot\ndog",
-    "image": "assets/images/foods/Hot-Dog-150x150.png"
-  },
-  {
-    "id": 31,
-    "name": "Ice\ncream",
-    "image": "assets/images/foods/Ice-cream-150x150.png"
-  },
-  {"id": 32, "name": "Jam", "image": "assets/images/foods/Jam-150x150.png"},
-  {"id": 33, "name": "Kebab", "image": "assets/images/foods/kebab-150x150.png"},
-  {
-    "id": 34,
-    "name": "Lemonade",
-    "image": "assets/images/foods/lemonade2-150x150.png"
-  },
-  {"id": 35, "name": "Meat", "image": "assets/images/foods/Meat-150x150.png"},
-  {"id": 36, "name": "Milk", "image": "assets/images/foods/Milk-150x150.png"},
-  {
-    "id": 37,
-    "name": "Milk\nshake",
-    "image": "assets/images/foods/milkshake1-150x150.png"
-  },
-  {
-    "id": 38,
-    "name": "Muffin",
-    "image": "assets/images/foods/muffins-150x150.png"
-  },
-  {
-    "id": 39,
-    "name": "Noodle",
-    "image": "assets/images/foods/Noodle-150x150.webp"
-  },
-  {
-    "id": 40,
-    "name": "Omelet",
-    "image": "assets/images/foods/omelet-150x150.png"
-  },
-  {
-    "id": 41,
-    "name": "Orange\njuice",
-    "image": "assets/images/foods/orange-juice-1-150x150.png"
-  },
-  {
-    "id": 42,
-    "name": "Pancake",
-    "image": "assets/images/foods/Pancakes-150x150.png"
-  },
-  {
-    "id": 43,
-    "name": "Pasta",
-    "image": "assets/images/foods/Pasta-150x150.webp"
-  },
-  {"id": 44, "name": "Pizza", "image": "assets/images/foods/pizza-150x150.png"},
-  {"id": 45, "name": "Rice", "image": "assets/images/foods/Rice-150x150.png"},
-  {
-    "id": 46,
-    "name": "Roast\nchicken",
-    "image": "assets/images/foods/Roast-chicken-150x150.png"
-  },
-  {"id": 47, "name": "Roll", "image": "assets/images/foods/roll-150x150.png"},
-  {"id": 48, "name": "Salad", "image": "assets/images/foods/Salad-150x150.png"},
-  {
-    "id": 49,
-    "name": "Sandwich",
-    "image": "assets/images/foods/sandwich-150x150.png"
-  },
-  {
-    "id": 50,
-    "name": "Sausage",
-    "image": "assets/images/foods/Sausages-150x150.png"
-  },
-  {
-    "id": 51,
-    "name": "Seafood",
-    "image": "assets/images/foods/Seafood-150x150.png"
-  },
-  {
-    "id": 52,
-    "name": "Soft\ndrink",
-    "image": "assets/images/foods/soft-drink-150x150.png"
-  },
-  {"id": 53, "name": "Soup", "image": "assets/images/foods/Soup-150x150.png"},
-  {"id": 54, "name": "Steak", "image": "assets/images/foods/steak-150x150.png"},
-  {"id": 55, "name": "Taco", "image": "assets/images/foods/taco-150x150.png"},
-  {"id": 56, "name": "Tea", "image": "assets/images/foods/Tea-150x150.png"},
-  {
-    "id": 57,
-    "name": "Vegetables",
-    "image": "assets/images/foods/Vegetables-150x150.png"
-  },
-  {
-    "id": 58,
-    "name": "Water",
-    "image": "assets/images/foods/water-1-150x150.png"
-  },
-  {
-    "id": 59,
-    "name": "Watermelon",
-    "image": "assets/images/foods/Watermelon-150x150.png"
-  },
-  {
-    "id": 60,
-    "name": "Yogurt",
-    "image": "assets/images/foods/yogurt-150x150.png"
-  }
-];
+Future<List<FoodList>> fetchFoodList() async {
+  final String response =
+      await rootBundle.loadString('assets/json/food_list.json');
+  return [for (var i in jsonDecode(response)) FoodList.fromMap(i)];
+}
 
 class FoodTable extends StatelessWidget {
-  FoodTable({Key? key, required this.itemList, required this.itemTable})
-      : super(key: key);
-  final List<Map<String, dynamic>> itemList;
+  FoodTable(this.itemTable, {Key? key}) : super(key: key);
   final List<List<int>> itemTable;
 
   final Color color =
@@ -700,23 +430,121 @@ class FoodTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Table(
-        // defaultColumnWidth: FixedColumnWidth(size.width * 0.15),
-        border: TableBorder.all(
-          // color: Colors.black,
-          color: Colors.white38,
-          style: BorderStyle.solid,
-          width: 2,
-        ),
-        children: <TableRow>[
-          for (var i = 0; i < itemTable.length; i++)
-            TableRow(children: <Widget>[
-              // Text('data'),
-              for (var j = 0; j < itemTable[i].length; j++)
-                _foodTableCell(
-                    image: itemList[itemTable[i][j] - 1]['image'],
-                    name: itemList[itemTable[i][j] - 1]['name']),
-            ]),
-        ]);
+    return FutureBuilder<List<FoodList>>(
+      future: fetchFoodList(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Table(
+              // defaultColumnWidth: FixedColumnWidth(size.width * 0.15),
+              border: TableBorder.all(
+                // color: Colors.black,
+                color: Colors.white38,
+                style: BorderStyle.solid,
+                width: 2,
+              ),
+              children: <TableRow>[
+                for (var i = 0; i < itemTable.length; i++)
+                  TableRow(children: <Widget>[
+                    for (var j = 0; j < itemTable[i].length; j++)
+                      _foodTableCell(
+                        image: snapshot.data![itemTable[i][j] - 1].image,
+                        name: snapshot.data![itemTable[i][j] - 1].name,
+                      )
+                  ]),
+              ]);
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        return const CircularProgressIndicator();
+      },
+    );
   }
 }
+// const tableList = <List<List<int>>>[
+// const List<Map<String, dynamic>> _foodList = [
+
+  // Fetch content from the json file
+  // Future<void> _readJson() async {
+  //   final String response =
+  //       await rootBundle.loadString('assets/json/food_list.json');
+  //   // final response = await http.get(uri); //network data
+  //   final data = await jsonDecode(response);
+  //   // print(fetchFoodList());
+  //   setState(() => _foodList2 = data);
+  // }
+
+  // Future<FoodList> fetchFoodListOnline() async {
+  //   final String url = 'https://jsonplaceholder.typicode.com/albums/1';
+  //   var response = await http.get(Uri.parse(url), headers: {
+  //     'Content-Type': 'application/json',
+  //     'Accept': 'application/json',
+  //   });
+  //   if (response.statusCode == 200) {
+  //     // If the call to the server was successful, parse the JSON
+  //     return FoodList.fromJson(json.decode(response.body));
+  //   } else {
+  //     // If that call was not successful, throw an error.
+  //     throw Exception('Failed to load post');
+  //   }
+  // }
+
+// final response = await http.get(uri); //network data-
+// final jsonData = '{ "name": "Pizza da Mario", "cuisine": "Italian" }';
+// final jsonData = response.body;
+// final parsedJson = jsonDecode(jsonData);
+
+// class FoodTable extends StatelessWidget {
+//   FoodTable({Key? key, required this.itemList, required this.itemTable})
+//       : super(key: key);
+//   final List<dynamic> itemList;
+//   // final List<Map<String, dynamic>> itemList;
+//   final List<List<int>> itemTable;
+
+//   final Color color =
+//       Colors.primaries[Random().nextInt(Colors.primaries.length)];
+//   Padding _foodTableCell({required String name, required String image}) {
+//     return Padding(
+//       padding: const EdgeInsets.all(8),
+//       child: Column(
+//         children: <Widget>[
+//           Image.asset(
+//             image,
+//             // fit: BoxFit.cover,
+//           ),
+//           Text(
+//             name,
+//             style: const TextStyle(
+//               // color: Colors.black,
+//               color: Colors.white60,
+//               fontWeight: FontWeight.bold,
+//               // fontFamily: 'Consolas',
+//               fontSize: 12,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Table(
+//         // defaultColumnWidth: FixedColumnWidth(size.width * 0.15),
+//         border: TableBorder.all(
+//           // color: Colors.black,
+//           color: Colors.white38,
+//           style: BorderStyle.solid,
+//           width: 2,
+//         ),
+//         children: <TableRow>[
+//           for (var i = 0; i < itemTable.length; i++)
+//             TableRow(children: <Widget>[
+//               // Text('data'),
+//               for (var j = 0; j < itemTable[i].length; j++)
+//                 _foodTableCell(
+//                     image: itemList[itemTable[i][j] - 1]['image'],
+//                     name: itemList[itemTable[i][j] - 1]['name']),
+//             ]),
+//         ]);
+//   }
+// }
