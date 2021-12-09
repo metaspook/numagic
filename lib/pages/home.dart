@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:numagic/pages/food_table.dart';
 import 'package:numagic/pages/translucent.dart';
-import 'package:numagic/router.dart';
+import 'package:numagic/utils/router.dart';
 import 'package:numagic/widgets/appbar.dart';
 import 'package:numagic/widgets/drawer.dart';
 import 'package:numagic/widgets/items.dart';

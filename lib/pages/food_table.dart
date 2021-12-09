@@ -4,10 +4,11 @@ import 'dart:ui';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:numagic/models/food_list.dart';
-import 'package:numagic/models/table_list.dart';
-import 'package:numagic/mods.dart';
+import 'package:numagic/models/food.dart';
+import 'package:numagic/utils/constants.dart';
+import 'package:numagic/utils/methods.dart';
 import 'package:numagic/widgets/custom_divider.dart';
+import 'package:numagic/widgets/food_table.dart';
 
 class FoodTablePage extends StatefulWidget {
   const FoodTablePage({Key? key}) : super(key: key);
@@ -17,11 +18,10 @@ class FoodTablePage extends StatefulWidget {
 }
 
 class _FoodTablePageState extends State<FoodTablePage> {
-  List _foodList2 = [];
+  final List<Food> _foodList = [];
   // final GlobalKey _key = GlobalKey();
 
-  final Color color = modColors.elementAt(Random().nextInt(modColors.length));
-  // Colors.primaries[Random().nextInt(Colors.primaries.length)];
+  final Color color = Methods.colorRandom();
   final ScrollController _scrollController = ScrollController();
   // late String _tableTitle;
   var _tableIndex = 0;
@@ -30,7 +30,7 @@ class _FoodTablePageState extends State<FoodTablePage> {
   bool _gameStarted = false;
   String? _outImage, _outName;
   List<bool> _tableCheckbox = [
-    for (var i = 0; i < tableList.length; i++) false
+    for (var i = 0; i < Constants.foodTables.length; i++) false
   ];
 
   void _showDialog([String? title, String? image, String? name]) {
@@ -106,12 +106,12 @@ class _FoodTablePageState extends State<FoodTablePage> {
 
   void _submitTable() {
     int sum = 0;
-    for (var i = 0; i < tableList.length; i++) {
+    for (var i = 0; i < Constants.foodTables.length; i++) {
       if (_tableCheckbox[i] == true) {
-        sum += tableList[i][0][5];
+        sum += Constants.foodTables[i][0][5];
       }
     }
-    if (sum == 0 || sum > _foodList2.length) {
+    if (sum == 0 || sum > _foodList.length) {
       _outImage = null;
       _outName = null;
       _showDialog(
@@ -120,8 +120,8 @@ class _FoodTablePageState extends State<FoodTablePage> {
         'Invalid table selection.',
       );
     } else {
-      _outImage = _foodList2[sum - 1]['image'];
-      _outName = _foodList2[sum - 1]['name'];
+      _outImage = _foodList[sum - 1].image;
+      _outName = _foodList[sum - 1].name;
       _showDialog(
         '🪄 Secret Food 🪄',
         _outImage!,
@@ -132,7 +132,9 @@ class _FoodTablePageState extends State<FoodTablePage> {
   }
 
   void _resetTable() => setState(() {
-        _tableCheckbox = [for (var i = 0; i < tableList.length; i++) false];
+        _tableCheckbox = [
+          for (var i = 0; i < Constants.foodTables.length; i++) false
+        ];
         _tableIndex = 0;
         _outImage = null;
         _outName = null;
@@ -168,8 +170,7 @@ class _FoodTablePageState extends State<FoodTablePage> {
   @override
   void initState() {
     _scrollController.addListener(_scrollListener);
-    // _readJson();
-
+    _fetchFoodList();
     super.initState();
   }
 
@@ -264,7 +265,7 @@ class _FoodTablePageState extends State<FoodTablePage> {
                       }),
                       control: SwiperControl(size: 40, color: color),
                       // pagination: const SwiperPagination(),
-                      itemCount: tableList.length,
+                      itemCount: Constants.foodTables.length,
                       itemBuilder: (context, index) {
                         return Center(
                           child: SizedBox(
@@ -274,7 +275,9 @@ class _FoodTablePageState extends State<FoodTablePage> {
                             child: Padding(
                               padding: const EdgeInsets.only(
                                   top: 10, left: 5, right: 5),
-                              child: FoodTable(tableList[index]),
+                              child: FoodTable(
+                                  itemTable: Constants.foodTables[index],
+                                  itemList: _foodList),
                             ),
                           ),
                         );
@@ -285,7 +288,9 @@ class _FoodTablePageState extends State<FoodTablePage> {
                           const EdgeInsets.only(top: 10, left: 5, right: 5),
                       child: Stack(
                         children: [
-                          FoodTable(tableList[_tableIndex]),
+                          FoodTable(
+                              itemTable: Constants.foodTables[_tableIndex],
+                              itemList: _foodList),
                           BackdropFilter(
                             filter: ImageFilter.blur(sigmaX: 1.5, sigmaY: 1.5),
                             child: SizedBox(
@@ -390,77 +395,19 @@ class _FoodTablePageState extends State<FoodTablePage> {
             ),
     );
   }
-}
 
-Future<List<FoodList>> fetchFoodList() async {
-  final String response =
-      await rootBundle.loadString('assets/json/food_list.json');
-  return [for (var i in jsonDecode(response)) FoodList.fromMap(i)];
-}
-
-class FoodTable extends StatelessWidget {
-  FoodTable(this.itemTable, {Key? key}) : super(key: key);
-  final List<List<int>> itemTable;
-
-  final Color color =
-      Colors.primaries[Random().nextInt(Colors.primaries.length)];
-  Padding _foodTableCell({required String name, required String image}) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        children: <Widget>[
-          Image.asset(
-            image,
-            // fit: BoxFit.cover,
-          ),
-          Text(
-            name,
-            style: const TextStyle(
-              // color: Colors.black,
-              color: Colors.white60,
-              fontWeight: FontWeight.bold,
-              // fontFamily: 'Consolas',
-              fontSize: 12,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<FoodList>>(
-      future: fetchFoodList(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Table(
-              // defaultColumnWidth: FixedColumnWidth(size.width * 0.15),
-              border: TableBorder.all(
-                // color: Colors.black,
-                color: Colors.white38,
-                style: BorderStyle.solid,
-                width: 2,
-              ),
-              children: <TableRow>[
-                for (var i = 0; i < itemTable.length; i++)
-                  TableRow(children: <Widget>[
-                    for (var j = 0; j < itemTable[i].length; j++)
-                      _foodTableCell(
-                        image: snapshot.data![itemTable[i][j] - 1].image,
-                        name: snapshot.data![itemTable[i][j] - 1].name,
-                      )
-                  ]),
-              ]);
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
-        return const CircularProgressIndicator();
-      },
-    );
+  Future<void> _fetchFoodList() async {
+    final String response =
+        await rootBundle.loadString('assets/json/food_list.json');
+    for (var i in json.decode(response)) {
+      _foodList.add(Food.fromMap(i));
+    }
   }
 }
-// const tableList = <List<List<int>>>[
+
+
+
+// const Constants.foodTables = <List<List<int>>>[
 // const List<Map<String, dynamic>> _foodList = [
 
   // Fetch content from the json file

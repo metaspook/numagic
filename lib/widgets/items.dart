@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:numagic/utils/methods.dart';
 
 class ItemWidget extends StatelessWidget {
   final int index;
@@ -14,7 +15,7 @@ class ItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color color = Colors.primaries[index % Colors.primaries.length];
+    final Color color = Methods.colorPrimariesIndex(index);
     return Padding(
       padding: const EdgeInsets.all(7.5),
       child: Container(

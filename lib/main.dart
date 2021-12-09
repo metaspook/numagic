@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:numagic/router.dart';
+import 'package:numagic/utils/router.dart';
 
 void main() {
   // Vx.setPathUrlStrategy();
