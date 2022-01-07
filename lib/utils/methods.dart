@@ -12,4 +12,10 @@ class Methods {
   // Useful when use with a builder.
   static MaterialColor colorPrimariesIndex(int index) =>
       Colors.primaries[index % Colors.primaries.length];
+
+  static MaterialColor colorPrimariesRandomIndex(int index) {
+    var primaries = [...Colors.primaries];
+    primaries.shuffle();
+    return primaries[index];
+  }
 }

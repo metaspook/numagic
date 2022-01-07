@@ -24,23 +24,46 @@ class ItemWidget extends StatelessWidget {
             BoxShadow(
               color: color.withOpacity(0.5),
               blurRadius: 10,
-              spreadRadius: 5,
+              spreadRadius: 7.5,
             ),
           ],
           color: color,
           borderRadius: BorderRadius.circular(10),
         ),
-        width: 50,
-        height: 30,
-        // color: color.withOpacity(0.5),
-        child: MaterialButton(
+        child: TextButton(
           onPressed: () => function(),
-          // tileColor: color.withOpacity(0.3),
-          child: Text(title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 25, color: Colors.white)),
+          child: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 25),
+          ),
         ),
       ),
     );
+    // Padding(
+    //   padding: const EdgeInsets.all(7.5),
+    //   child: Container(
+    //     decoration: BoxDecoration(
+    //       boxShadow: [
+    //         BoxShadow(
+    //           color: color.withOpacity(0.5),
+    //           blurRadius: 10,
+    //           spreadRadius: 5,
+    //         ),
+    //       ],
+    //       color: color,
+    //       borderRadius: BorderRadius.circular(10),
+    //     ),
+    //     width: 50,
+    //     height: 30,
+    //     // color: color.withOpacity(0.5),
+    //     child: MaterialButton(
+    //       onPressed: () => function(),
+    //       // tileColor: color.withOpacity(0.3),
+    //       child: Text(title,
+    //           textAlign: TextAlign.center,
+    //           style: const TextStyle(fontSize: 25, color: Colors.white)),
+    //     ),
+    //   ),
+    // );
   }
 }

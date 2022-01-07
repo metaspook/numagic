@@ -139,7 +139,7 @@ class _FoodTablePageState extends State<FoodTablePage> {
         _outImage = null;
         _outName = null;
         _showFloatingButton = true;
-        _gameStarted = true;
+        _gameStarted = false;
         _scrollBottom();
       });
 
@@ -189,206 +189,210 @@ class _FoodTablePageState extends State<FoodTablePage> {
       // appBar: const AppBarWidget(title: 'Food Table'),
       // extendBodyBehindAppBar: true,
       backgroundColor: Colors.transparent,
-      body: CustomScrollView(
-        physics: _gameStarted
-            ? const BouncingScrollPhysics()
-            : const NeverScrollableScrollPhysics(),
-        controller: _scrollController,
-        slivers: <Widget>[
-          SliverAppBar(
-            backgroundColor: color.withOpacity(0.75),
-            title: _gameStarted && isShrink
-                ? GestureDetector(
-                    onTap: _setCheckbox,
-                    child: Row(children: [
-                      Checkbox(
-                          activeColor: Colors.black.withOpacity(0.65),
-                          checkColor: color,
-                          value: _tableCheckbox[_tableIndex],
-                          onChanged: (value) => _setCheckbox(value)),
-                      Text('Table No. ${_tableIndex + 1}'),
-                    ]),
-                  )
-                : Text('Steps:'),
-            centerTitle: true,
-            expandedHeight: 235 - kToolbarHeight,
-            // expandedHeight: 0.22 * (size.height + kToolbarHeight),
-            // elevation: 10,
-            // floating: false,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              titlePadding: EdgeInsets.only(
-                top: 0.16 * size.height,
-                // top: 0.150 * (size.height + kToolbarHeight),
-              ),
+      body: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+        child: CustomScrollView(
+          physics: _gameStarted
+              ? const BouncingScrollPhysics()
+              : const NeverScrollableScrollPhysics(),
+          controller: _scrollController,
+          slivers: <Widget>[
+            SliverAppBar(
+              backgroundColor: color.withOpacity(0.75),
+              title: _gameStarted && isShrink
+                  ? GestureDetector(
+                      onTap: _setCheckbox,
+                      child: Row(children: [
+                        Checkbox(
+                            activeColor: Colors.black.withOpacity(0.65),
+                            checkColor: color,
+                            value: _tableCheckbox[_tableIndex],
+                            onChanged: (value) => _setCheckbox(value)),
+                        Text('Table No. ${_tableIndex + 1}'),
+                      ]),
+                    )
+                  : Text('Steps:'),
               centerTitle: true,
-              title: Padding(
-                padding: const EdgeInsets.all(5),
-                child: Container(
+              expandedHeight: 235 - kToolbarHeight,
+              // expandedHeight: 0.22 * (size.height + kToolbarHeight),
+              // elevation: 10,
+              // floating: false,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                titlePadding: EdgeInsets.only(
+                  top: 0.16 * size.height,
+                  // top: 0.150 * (size.height + kToolbarHeight),
+                ),
+                centerTitle: true,
+                title: Padding(
                   padding: const EdgeInsets.all(5),
-                  width: size.width * 0.70,
-                  height: size.height * 0.090,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.white54,
-                      // width: 5,
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    width: size.width * 0.70,
+                    height: size.height * 0.090,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.white54,
+                        // width: 5,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Text(
-                    """
+                    child: const Text(
+                      """
  1. Keep secret a food from any of the
     6 tables below.
  2. Select all the tables containing
     the food you kept secret.
  3. Submit, I'll show you the MAGIC 🪄
 """,
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontFamily: 'Consolas',
-                      fontWeight: FontWeight.bold,
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontFamily: 'Consolas',
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-          SliverFillRemaining(
-            // hasScrollBody: false,
-            child: _gameStarted
-                ? Swiper(
-                    onIndexChanged: (index) => setState(() {
-                      _tableIndex = index;
-                      _scrollTop();
-                    }),
-                    control: SwiperControl(size: 40, color: color),
-                    // pagination: const SwiperPagination(),
-                    itemCount: Constants.foodTables.length,
-                    itemBuilder: (context, index) {
-                      return Center(
-                        child: SizedBox(
-                          // height: 0.72 * size.height,
-                          height: 630 - kToolbarHeight,
-                          // height: 0.75 * size.height,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 10, left: 5, right: 5),
-                            child: FoodTable(
-                                itemTable: Constants.foodTables[index],
-                                itemList: _foodList),
+            SliverFillRemaining(
+              // hasScrollBody: false,
+              child: _gameStarted
+                  ? Swiper(
+                      onIndexChanged: (index) => setState(() {
+                        _tableIndex = index;
+                        _scrollTop();
+                      }),
+                      control: SwiperControl(size: 40, color: color),
+                      // pagination: const SwiperPagination(),
+                      itemCount: Constants.foodTables.length,
+                      itemBuilder: (context, index) {
+                        return Center(
+                          child: SizedBox(
+                            // height: 0.72 * size.height,
+                            height: 630 - kToolbarHeight,
+                            // height: 0.75 * size.height,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 10, left: 5, right: 5),
+                              child: FoodTable(
+                                  itemTable: Constants.foodTables[index],
+                                  itemList: _foodList),
+                            ),
                           ),
+                        );
+                      },
+                    )
+                  : Padding(
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 5, right: 5),
+                      child: Stack(
+                        children: [
+                          FoodTable(
+                              itemTable: Constants.foodTables[_tableIndex],
+                              itemList: _foodList),
+                          BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 1.5, sigmaY: 1.5),
+                            child: SizedBox(
+                                width: size.width, height: size.height),
+                          )
+                        ],
+                      ),
+                    ),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: _showFloatingButton
+          ? Align(
+              widthFactor: 2.05,
+              heightFactor: 8,
+              // alignment: Alignment.center,
+              child: Container(
+                width: 175,
+                height: 80,
+                decoration: BoxDecoration(
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      color: color.withOpacity(0.75),
+                      blurRadius: 15,
+                      spreadRadius: 1.5,
+                    ),
+                  ],
+                ),
+                child: FloatingActionButton.extended(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  onPressed: () {
+                    _gameStarted = true;
+                    _showFloatingButton = false;
+                    _scrollTop();
+                  },
+                  backgroundColor: color.withOpacity(0.75),
+                  elevation: 0,
+                  highlightElevation: 0,
+                  enableFeedback: true,
+                  label: const Text('Start',
+                      style:
+                          TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
+                  icon: const Icon(Icons.forward_rounded, size: 50),
+                ),
+              ),
+            )
+          : Align(
+              widthFactor: 0.940,
+              heightFactor: 5,
+              // widthFactor: size.width * 0.00240,
+              // alignment: Alignment.bottomCenter,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: color,
+                          blurRadius: 25,
+                          spreadRadius: 2.5,
                         ),
-                      );
-                    },
-                  )
-                : Padding(
-                    padding: const EdgeInsets.only(top: 10, left: 5, right: 5),
-                    child: Stack(
-                      children: [
-                        FoodTable(
-                            itemTable: Constants.foodTables[_tableIndex],
-                            itemList: _foodList),
-                        BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 1.5, sigmaY: 1.5),
-                          child:
-                              SizedBox(width: size.width, height: size.height),
-                        )
                       ],
                     ),
+                    child: FloatingActionButton.extended(
+                      onPressed: _submitTable,
+                      backgroundColor: color.withOpacity(0.75),
+                      elevation: 0,
+                      highlightElevation: 0,
+                      enableFeedback: true,
+                      label:
+                          const Text('Submit', style: TextStyle(fontSize: 16)),
+                      icon: const Icon(Icons.check, size: 18),
+                    ),
                   ),
-          ),
-        ],
-      ),
-      // floatingActionButton: _showFloatingButton
-      //     ? Align(
-      //         widthFactor: 2.05,
-      //         heightFactor: 8,
-      //         // alignment: Alignment.center,
-      //         child: Container(
-      //           width: 175,
-      //           height: 80,
-      //           decoration: BoxDecoration(
-      //             boxShadow: <BoxShadow>[
-      //               BoxShadow(
-      //                 color: color.withOpacity(0.75),
-      //                 blurRadius: 15,
-      //                 spreadRadius: 1.5,
-      //               ),
-      //             ],
-      //           ),
-      //           child: FloatingActionButton.extended(
-      //             shape: RoundedRectangleBorder(
-      //               borderRadius: BorderRadius.circular(20),
-      //             ),
-      //             onPressed: () {
-      //               _gameStarted = true;
-      //               _showFloatingButton = false;
-      //               _scrollTop();
-      //             },
-      //             backgroundColor: color.withOpacity(0.75),
-      //             elevation: 0,
-      //             highlightElevation: 0,
-      //             enableFeedback: true,
-      //             label: const Text('Start',
-      //                 style:
-      //                     TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
-      //             icon: const Icon(Icons.forward_rounded, size: 50),
-      //           ),
-      //         ),
-      //       )
-      //     : Align(
-      //         widthFactor: 0.940,
-      //         heightFactor: 5,
-      //         // widthFactor: size.width * 0.00240,
-      //         // alignment: Alignment.bottomCenter,
-      //         child: Row(
-      //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //           children: [
-      //             Container(
-      //               decoration: BoxDecoration(
-      //                 boxShadow: <BoxShadow>[
-      //                   BoxShadow(
-      //                     color: color,
-      //                     blurRadius: 25,
-      //                     spreadRadius: 2.5,
-      //                   ),
-      //                 ],
-      //               ),
-      //               child: FloatingActionButton.extended(
-      //                 onPressed: _submitTable,
-      //                 backgroundColor: color.withOpacity(0.75),
-      //                 elevation: 0,
-      //                 highlightElevation: 0,
-      //                 enableFeedback: true,
-      //                 label:
-      //                     const Text('Submit', style: TextStyle(fontSize: 16)),
-      //                 icon: const Icon(Icons.check, size: 18),
-      //               ),
-      //             ),
-      //             Container(
-      //               decoration: BoxDecoration(
-      //                 boxShadow: <BoxShadow>[
-      //                   BoxShadow(
-      //                     color: color,
-      //                     blurRadius: 25,
-      //                     spreadRadius: 2.5,
-      //                   ),
-      //                 ],
-      //               ),
-      //               child: FloatingActionButton.extended(
-      //                 onPressed: _resetTable,
-      //                 backgroundColor: color.withOpacity(0.75),
-      //                 elevation: 0,
-      //                 highlightElevation: 0,
-      //                 enableFeedback: true,
-      //                 label:
-      //                     const Text('Reset', style: TextStyle(fontSize: 16)),
-      //                 icon: const Icon(Icons.refresh_outlined, size: 18),
-      //               ),
-      // ),
-      // ],
-      // ),
-      // ),
+                  Container(
+                    decoration: BoxDecoration(
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: color,
+                          blurRadius: 25,
+                          spreadRadius: 2.5,
+                        ),
+                      ],
+                    ),
+                    child: FloatingActionButton.extended(
+                      onPressed: _resetTable,
+                      backgroundColor: color.withOpacity(0.75),
+                      elevation: 0,
+                      highlightElevation: 0,
+                      enableFeedback: true,
+                      label:
+                          const Text('Reset', style: TextStyle(fontSize: 16)),
+                      icon: const Icon(Icons.refresh_outlined, size: 18),
+                    ),
+                  ),
+                ],
+              ),
+            ),
     );
   }
 
