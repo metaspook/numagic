@@ -2,7 +2,7 @@
 // addition, subtraction, multiplication and division
 
 import 'package:flutter/material.dart';
-import 'package:numagic/widgets/appbar.dart';
+import 'package:numagic/widgets/appbar_mod.dart';
 
 class HiddenNumber1 extends StatefulWidget {
   const HiddenNumber1({Key? key}) : super(key: key);
@@ -40,7 +40,7 @@ class _HiddenNumber1State extends State<HiddenNumber1> {
   Widget build(BuildContext context) {
     // final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBarWidget(title: 'Hidden Number'),
+      appBar: AppBarMod(title: 'Hidden Number'),
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: SingleChildScrollView(

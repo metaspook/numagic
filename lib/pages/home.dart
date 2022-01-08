@@ -7,7 +7,7 @@ import 'package:numagic/pages/translucent.dart';
 import 'package:numagic/utils/methods.dart';
 import 'package:numagic/utils/router.dart';
 import 'package:numagic/widgets/all_foods.dart';
-import 'package:numagic/widgets/appbar.dart';
+import 'package:numagic/widgets/appbar_mod.dart';
 import 'package:numagic/widgets/drawer.dart';
 import 'package:numagic/widgets/home_contants.dart';
 import 'package:numagic/widgets/items.dart';
@@ -46,10 +46,7 @@ class _HomePageState extends State<HomePage> {
     var platform = Theme.of(context).platform;
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // backgroundColor: ThemeData.dark().primaryColor,
-      // backgroundColor: Colors.deepPurple,
-      // backgroundColor: Colors.grey,
-      appBar: const AppBarWidget(title: 'Food Table'),
+      appBar: const AppBarMod(title: 'NuMagic 🪄'),
       drawer: const DrawerWidget(),
       // floatingActionButtonLocation: AllFoods.floatingActionButtonLocation(),
       // floatingActionButton: AllFoods.floatingActionButton(),

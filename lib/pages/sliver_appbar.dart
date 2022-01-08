@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:numagic/widgets/appbar.dart';
+import 'package:numagic/widgets/appbar_mod.dart';
 
 class SliverAppbar extends StatelessWidget {
   @override
@@ -7,7 +7,7 @@ class SliverAppbar extends StatelessWidget {
     final title = 'GeeksforGeeks';
 
     return Scaffold(
-      appBar: const AppBarWidget(title: 'Food Table'),
+      appBar: const AppBarMod(title: 'Food Table'),
 
       //1
       body: NestedScrollView(

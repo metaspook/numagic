@@ -2,7 +2,7 @@
 // addition, subtraction, multiplication and division
 
 import 'package:flutter/material.dart';
-import 'package:numagic/widgets/appbar.dart';
+import 'package:numagic/widgets/appbar_mod.dart';
 
 class NumberTable extends StatefulWidget {
   const NumberTable({Key? key}) : super(key: key);
@@ -149,7 +149,7 @@ class _NumberTableState extends State<NumberTable> {
   Widget build(BuildContext context) {
     // final size = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: AppBarWidget(title: 'Number Table'),
+        appBar: AppBarMod(title: 'Number Table'),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: SingleChildScrollView(
