@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 
 class AppBarMod extends StatelessWidget with PreferredSizeWidget {
 // class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
-  const AppBarMod({Key? key, required this.title}) : super(key: key);
+  const AppBarMod({Key? key, required this.title, this.onTap})
+      : super(key: key);
   final String title;
+  final Function? onTap;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -14,24 +16,32 @@ class AppBarMod extends StatelessWidget with PreferredSizeWidget {
     return AppBar(
       // toolbarOpacity: 0.9,
       // bottomOpacity: 0.1,
-      // actionsIconTheme: ,
+      // actionsIconTheme: const IconThemeData(color: Colors.white60),
       actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 30),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.done_outline_rounded,
-                size: 20,
+        if (onTap != null)
+          Padding(
+            padding: const EdgeInsets.only(right: 25),
+            child: GestureDetector(
+              onTap: onTap!(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const <Widget>[
+                  Icon(
+                    Icons.done_outline_rounded,
+                    size: 20,
+                  ),
+                  Text(
+                    'DONE',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white60,
+                    ),
+                  ),
+                ],
               ),
-              Text(
-                'DONE',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-              ),
-            ],
+            ),
           ),
-        ),
       ],
       // automaticallyImplyLeading: false,
       // shadowColor: Colors.black,

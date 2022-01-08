@@ -7,6 +7,7 @@ import 'package:numagic/pages/translucent.dart';
 import 'package:numagic/utils/methods.dart';
 import 'package:numagic/utils/router.dart';
 import 'package:numagic/widgets/all_foods.dart';
+import 'package:numagic/widgets/all_number.dart';
 import 'package:numagic/widgets/appbar_mod.dart';
 import 'package:numagic/widgets/drawer.dart';
 import 'package:numagic/widgets/home_contants.dart';
@@ -22,9 +23,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final Color color = Methods.colorPrimariesRandom();
-
-  var showFoodTable = true;
+  final Color _color = Methods.colorPrimariesRandom();
+  bool _isAbout = true;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: const AppBarMod(title: 'NuMagic 🪄'),
-      drawer: const DrawerWidget(),
+      // drawer: const DrawerWidget(),
       // floatingActionButtonLocation: AllFoods.floatingActionButtonLocation(),
       // floatingActionButton: AllFoods.floatingActionButton(),
       body: TranslucentBackground(
@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            SizedBox(height: 130),
+            SizedBox(height: 120),
             Text('Choose Table Type',
                 style: TextStyle(color: Colors.white70, fontSize: 25)),
             SizedBox(height: 10),
@@ -96,50 +96,100 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
+                  height: 65,
+                  width: 170,
+
                   // padding: const EdgeInsets.symmetric(
                   //     horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
+                    // shape: BoxShape.circle,
                     border: Border.all(color: Colors.white70, width: 2.5),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: TextButton(
-                    onPressed: () => {},
-                    // showCupertinoModalPopup(
-                    //     context: context,
-                    //     builder: (context) => const FoodTablePage()),
-                    child: Text(
-                      'Number',
-                      style: TextStyle(color: Colors.white70, fontSize: 40),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 20),
-                Container(
-                  // height: 60,
-                  // padding: const EdgeInsets.symmetric(
-                  //     horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white70, width: 2.5),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(20),
+                        bottomLeft: Radius.circular(20)),
                   ),
                   child: TextButton(
                     onPressed: () =>
                         // () {},
                         Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => AllFoods()),
+                      MaterialPageRoute(builder: (context) => AllNumber()),
                     ),
                     // showCupertinoModalPopup(
                     //     context: context,
                     //     builder: (context) => const FoodTablePage()),
                     child: Text(
-                      'Food',
+                      'Number',
+                      // textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white70, fontSize: 40),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Container(
+                  height: 65,
+                  width: 170,
+                  // padding: const EdgeInsets.symmetric(
+                  //     horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white70, width: 2.5),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20)),
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AllFoods()),
+                      );
+                    },
+                    // showCupertinoModalPopup(
+                    //     context: context,
+                    //     builder: (context) => const FoodTablePage()),
+                    child: Text(
+                      'Food',
+                      // textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 40,
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
+            SizedBox(height: 230),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _isAbout = !_isAbout;
+                });
+              },
+              child: _isAbout
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      // crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.info_outlined,
+                          color: Colors.white60,
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          'About',
+                          style: TextStyle(color: Colors.white70, fontSize: 20),
+                        ),
+                      ],
+                    )
+                  : Text(
+                      """
+Made with  ❤️  from  🇧🇩
+Copyright © 2022, Metaspook""",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white70, fontSize: 20),
+                    ),
+            )
           ],
         ),
       ),

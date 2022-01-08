@@ -16,7 +16,7 @@ class AllFoods extends StatefulWidget {
 }
 
 class _AllFoodsState extends State<AllFoods> {
-  late Future<List<Food>> _foodGrid;
+  late final Future<List<Food>> _foodGrid;
 
   @override
   void initState() {
@@ -29,7 +29,10 @@ class _AllFoodsState extends State<AllFoods> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       // appBar: AppBarMod(title: 'Food Grid'),
-      appBar: AppBarMod(title: 'Choose Food'),
+      appBar: AppBarMod(
+        title: 'Choose Food',
+        onTap: () {},
+      ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       // floatingActionButton: FloatingActionButton.extended(
       //   label: Text("I've Chosen"),
@@ -51,53 +54,59 @@ class _AllFoodsState extends State<AllFoods> {
             child: FutureBuilder<List<Food>>(
                 future: _foodGrid,
                 builder: (context, snapshot) {
-                  snapshot.data!.shuffle();
-                  return GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 5,
-                      ),
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white24),
-                          ),
-                          //   border: Border.all(
-                          //     color: Colors.black,
-                          //     width: 1,
-                          //   ),
-                          // ),
-                          // color: Methods.colorPrimariesIndex(index),
-                          // alignment: Alignment.center,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8.0, right: 8, top: 4),
-                            child: Column(
-                              // crossAxisAlignment: CrossAxisAlignment.center,
-                              // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                // const SizedBox(height: 10),
-                                Expanded(
-                                    child: Image.asset(
-                                  snapshot.data![index].image,
-                                  fit: BoxFit.fill,
-                                  // alignment: Alignment.center,
-                                )),
-                                const SizedBox(height: 2.5),
-                                Expanded(
-                                  child: Text(
-                                    snapshot.data![index].name,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Colors.white70, fontSize: 12),
-                                  ),
-                                ),
-                              ],
+                  if (snapshot.hasData) {
+                    snapshot.data!.shuffle();
+                    return GridView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 5,
+                        ),
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.white24),
                             ),
-                          ),
-                        );
-                      });
+                            //   border: Border.all(
+                            //     color: Colors.black,
+                            //     width: 1,
+                            //   ),
+                            // ),
+                            // color: Methods.colorPrimariesIndex(index),
+                            // alignment: Alignment.center,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8, right: 8, top: 4),
+                              child: Column(
+                                // crossAxisAlignment: CrossAxisAlignment.center,
+                                // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  const SizedBox(height: 10),
+                                  Expanded(
+                                      child: Image.asset(
+                                    snapshot.data![index].image,
+                                    fit: BoxFit.fill,
+                                    // alignment: Alignment.center,
+                                  )),
+                                  const SizedBox(height: 2.5),
+                                  Expanded(
+                                    child: Text(
+                                      snapshot.data![index].name,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          color: Colors.white70, fontSize: 12),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        });
+                  } else if (snapshot.hasError) {
+                    return Text("${snapshot.error}");
+                  }
+                  return const CircularProgressIndicator();
                 }),
           ),
         ),
@@ -107,7 +116,7 @@ class _AllFoodsState extends State<AllFoods> {
 
   Future<List<Food>> _fetchFoods() async {
     final String response =
-        await rootBundle.loadString('assets/json/food_list.json');
+        await rootBundle.loadString('assets/json/food_list.json', cache: true);
     return [for (var i in json.decode(response)) Food.fromMap(i)];
   }
 }

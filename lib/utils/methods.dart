@@ -16,6 +16,6 @@ class Methods {
   static MaterialColor colorPrimariesRandomIndex(int index) {
     var primaries = [...Colors.primaries];
     primaries.shuffle();
-    return primaries[index];
+    return primaries[index % primaries.length];
   }
 }
