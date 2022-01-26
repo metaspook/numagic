@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:numagic/models/food.dart';
+import 'package:numagic/pages/number_table_page.dart';
 import 'package:numagic/utils/methods.dart';
 import 'package:numagic/widgets/appbar_mod.dart';
 import 'package:numagic/widgets/translucent_background.dart';
@@ -36,7 +37,7 @@ class _AllNumberState extends State<AllNumber> {
       // appBar: AppBarMod(title: 'Food Grid'),
       appBar: AppBarMod(
         title: 'Choose Number',
-        onTap: () {},
+        routeOnTap: () => NumberTablePage(),
       ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       // floatingActionButton: FloatingActionButton.extended(
@@ -49,6 +50,7 @@ class _AllNumberState extends State<AllNumber> {
       //   icon: Icon(Icons.done),
       // ),
       body: TranslucentBackground(
+        blurFilter: [2, 2],
         child: Container(
           color: Colors.transparent,
           child: Padding(
@@ -65,8 +67,11 @@ class _AllNumberState extends State<AllNumber> {
                 itemCount: _numberList.length,
                 itemBuilder: (context, index) {
                   return Container(
+                    margin: EdgeInsets.all(5),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white24),
+                      color: Colors.black26,
+                      borderRadius: BorderRadius.circular(10),
+                      // border: Border.all(color: Colors.white24),
                     ),
                     //   border: Border.all(
                     //     color: Colors.black,
@@ -81,8 +86,7 @@ class _AllNumberState extends State<AllNumber> {
                         "${_numberList[index] + 1}",
                         // textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Methods.colorPrimariesRandomIndex(index)
-                              .withOpacity(0.75),
+                          color: Methods.colorPrimariesRandomIndex(index),
                           fontSize: 35,
                           fontWeight: FontWeight.bold,
                         ),

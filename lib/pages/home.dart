@@ -1,18 +1,14 @@
+import 'dart:convert';
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:numagic/pages/food_table.dart';
-import 'package:numagic/pages/translucent.dart';
+import 'package:flutter/services.dart';
+import 'package:numagic/models/food.dart';
+import 'package:numagic/pages/food_table_page.dart';
 import 'package:numagic/utils/methods.dart';
-import 'package:numagic/utils/router.dart';
 import 'package:numagic/widgets/all_foods.dart';
 import 'package:numagic/widgets/all_number.dart';
 import 'package:numagic/widgets/appbar_mod.dart';
-import 'package:numagic/widgets/drawer.dart';
-import 'package:numagic/widgets/home_contants.dart';
-import 'package:numagic/widgets/items.dart';
-import 'package:numagic/main.dart';
 import 'package:numagic/widgets/translucent_background.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,299 +19,189 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final Color _color = Methods.colorPrimariesRandom();
+  late final Future<List<Food>> _foodGrid;
   bool _isAbout = true;
 
   @override
+  void initState() {
+    _foodGrid = _fetchFoods();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // dynamic _currentPage = homePage2(context);
-    List<Map<String, dynamic>> itemList = [
-      {
-        "title": "Number Table",
-        "function": () =>
-            navigator.routeManager.push(Uri.parse("/number_table"))
-      },
-      {
-        "title": "Food Table",
-        "function": () => showCupertinoModalPopup(
-            context: context, builder: (context) => const FoodTablePage())
-        // navigator.routeManager.push(Uri.parse("/food_table"))
-      },
-    ];
-    Size size = MediaQuery.of(context).size;
-    var platform = Theme.of(context).platform;
+    Size _size = MediaQuery.of(context).size;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: const AppBarMod(title: 'NuMagic 🪄'),
-      // drawer: const DrawerWidget(),
-      // floatingActionButtonLocation: AllFoods.floatingActionButtonLocation(),
-      // floatingActionButton: AllFoods.floatingActionButton(),
+      // appBar: AppBarMod(title: 'Food Grid'),
+      appBar: AppBarMod(title: 'NuMagic 🪄'),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton: FloatingActionButton.extended(
+      //   label: Text("I've Chosen"),
+      //   onPressed: () {
+      //     setState(() {
+      //       // _active = !_active;
+      //     });
+      //   },
+      //   icon: Icon(Icons.done),
+      // ),
       body: TranslucentBackground(
-        child: Column(
-          // crossAxisAlignment: CrossAxisAlignment.center,
-          // mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 130),
-              child: Container(
-                padding: const EdgeInsets.all(5),
-                width: 380,
-                height: 135,
-                // width: size.width * 0.95,
-                // height: size.height * 0.3,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.white54,
-                    width: 2,
+        blurFilter: [0, 0],
+        child: Container(
+          color: Colors.transparent,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 7,
+              vertical: 12,
+            ),
+            child: ListView(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(15),
+                  margin: EdgeInsets.only(bottom: 80),
+                  // padding: EdgeInsets.all(_size.height * 0.0125),
+                  decoration: BoxDecoration(
+                    color: Colors.black26,
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Text(
-                  """
- Instruction:
- 1. Keep secret a Food or Number from
-    any of the 6 tables.
+                  child: const Text(
+                    """
+ How To Play:
+ ------------
+ 1. Select grid type and Keep secret
+    a Food or Number, Press DONE.
  2. Select all the tables containing
     your secret Food or Number.
- 3. Press Submit, I'll show MAGIC 🪄
-""",
+ 3. Press ✓, I'll show the MAGIC 🪄""",
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 17.5,
+                      fontFamily: 'Consolas',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                // SizedBox(height: 20),
+
+                Text(
+                  'Grid Type',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 17.5,
-                    fontFamily: 'Consolas',
+                    color: Colors.white12,
+                    fontSize: 80,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-            ),
-            SizedBox(height: 120),
-            Text('Choose Table Type',
-                style: TextStyle(color: Colors.white70, fontSize: 25)),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 65,
-                  width: 170,
+                SizedBox(height: 20),
 
-                  // padding: const EdgeInsets.symmetric(
-                  //     horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    // shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white70, width: 2.5),
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(20),
-                        bottomLeft: Radius.circular(20)),
-                  ),
-                  child: TextButton(
-                    onPressed: () =>
-                        // () {},
-                        Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AllNumber()),
-                    ),
-                    // showCupertinoModalPopup(
-                    //     context: context,
-                    //     builder: (context) => const FoodTablePage()),
-                    child: Text(
-                      'Number',
-                      // textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white70, fontSize: 40),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10),
-                Container(
-                  height: 65,
-                  width: 170,
-                  // padding: const EdgeInsets.symmetric(
-                  //     horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white70, width: 2.5),
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        bottomRight: Radius.circular(20)),
-                  ),
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => AllFoods()),
-                      );
-                    },
-                    // showCupertinoModalPopup(
-                    //     context: context,
-                    //     builder: (context) => const FoodTablePage()),
-                    child: Text(
-                      'Food',
-                      // textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 40,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      // height: 65,
+                      // width: 170,
+
+                      // padding: const EdgeInsets.symmetric(
+                      //     horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        // shape: BoxShape.circle,
+                        border: Border.all(color: Colors.black12, width: 10),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(20)),
+                      ),
+                      child: TextButton(
+                        onPressed: () =>
+                            // () {},
+                            Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AllNumber()),
+                        ),
+                        // showCupertinoModalPopup(
+                        //     context: context,
+                        //     builder: (context) => const FoodTablePage()),
+                        child: Text(
+                          'Number',
+                          // textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white54, fontSize: 40),
+                        ),
                       ),
                     ),
-                  ),
+                    SizedBox(width: 15),
+                    Container(
+                      // height: 65,
+                      // width: 170,
+                      // padding: const EdgeInsets.symmetric(
+                      //     horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black12, width: 10),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(20)),
+                      ),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => AllFoods()),
+                          );
+                        },
+                        child: Text(
+                          'Food',
+                          // textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white54,
+                            fontSize: 40,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            SizedBox(height: 230),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  _isAbout = !_isAbout;
-                });
-              },
-              child: _isAbout
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      // crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.info_outlined,
-                          color: Colors.white60,
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          'About',
-                          style: TextStyle(color: Colors.white70, fontSize: 20),
-                        ),
-                      ],
-                    )
-                  : Text(
-                      """
+                SizedBox(height: _size.height * 0.3),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isAbout = !_isAbout;
+                    });
+                  },
+                  child: _isAbout
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          // crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.info_outlined,
+                              color: Colors.white60,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              'About',
+                              style: TextStyle(
+                                  color: Colors.white70, fontSize: 20),
+                            ),
+                          ],
+                        )
+                      : Text(
+                          """
 Made with  ❤️  from  🇧🇩
 Copyright © 2022, Metaspook""",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white70, fontSize: 20),
-                    ),
-            )
-          ],
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white70, fontSize: 20),
+                        ),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
+
+  Future<List<Food>> _fetchFoods() async {
+    final String response =
+        await rootBundle.loadString('assets/json/food_list.json', cache: true);
+    return [for (var i in json.decode(response)) Food.fromMap(i)];
+  }
 }
-
-
-// GridView.builder(
-//     physics: NeverScrollableScrollPhysics(),
-//     padding: EdgeInsets.only(top: 8),
-//     // gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-
-//     //   maxCrossAxisExtent: 100,
-//     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//       crossAxisCount: constraints.maxWidth > 1024
-//           ? 4
-//           : constraints.maxWidth > 800
-//               ? 3
-//               : constraints.maxWidth > 500
-//                   ? 2
-//                   : 2,
-//       childAspectRatio: 1.5,
-//     ),
-//     itemCount: 20,
-//     itemBuilder: (context, index) {
-//       final Color color = Methods.colorPrimariesIndex(index);
-
-//       return Padding(
-//         padding: const EdgeInsets.all(5),
-//         child: Container(
-//           color: color,
-//           child: TextButton(
-//             onPressed: () => showCupertinoModalPopup(
-//                 context: context,
-//                 builder: (context) => const FoodTablePage()),
-//             child: Text(
-//               '',
-//               style: TextStyle(color: Colors.white, fontSize: 25),
-//             ),
-//           ),
-//         ),
-//       );
-//     });
-// Padding(
-//   padding: const EdgeInsets.all(8.0),
-//   child: Flex(
-//     direction:
-//         constraints.maxWidth > 800 ? Axis.horizontal : Axis.vertical,
-//     crossAxisAlignment: CrossAxisAlignment.stretch,
-//     mainAxisSize: MainAxisSize.max,
-//     children: [
-//       Expanded(
-//         child: ItemWidget(
-//           index: 0,
-//           title: "Numbers",
-//           function: () =>
-//               navigator.routeManager.push(Uri.parse("/number_table")),
-//         ),
-//       ),
-//       Expanded(
-//         child: ItemWidget(
-//           index: 1,
-//           title: "Foods",
-//           function: () => showCupertinoModalPopup(
-//               context: context,
-//               builder: (context) => const FoodTablePage()),
-//         ),
-//       ),
-//     ],
-//   ),
-// );
-
-// LayoutBuilder(builder: (context, constraints) {
-
-//   ];
-
-// return
-// ListView.builder(
-//     padding: EdgeInsets.symmetric(
-//         horizontal: 5,
-//         vertical: platform == TargetPlatform.iOS ||
-//                 platform == TargetPlatform.android
-//             ? 125
-//             : 65),
-//     itemCount: itemList.length,
-//     itemBuilder: (context, index) {
-//       return Padding(
-//         padding: const EdgeInsets.all(8.0),
-//         child: ItemWidget(
-//           index: index,
-//           title: itemList[index]["title"],
-//           function: itemList[index]["function"],
-//         ),
-//       );
-//     });
-
-//     GridView.count(
-//   padding: EdgeInsets.symmetric(
-//       horizontal: 5,
-//       vertical: platform == TargetPlatform.iOS ||
-//               platform == TargetPlatform.android
-//           ? 125
-//           : 65),
-//   children: [
-//     ItemWidget(
-//       index: 0,
-//       title: "Number Table",
-//       function: () =>
-//           navigator.routeManager.push(Uri.parse("/number_table")),
-//     ),
-//     ItemWidget(
-//       index: 0,
-//       title: "Number Table",
-//       function: () =>
-//           navigator.routeManager.push(Uri.parse("/number_table")),
-//     ),
-//   ],
-
-//   crossAxisCount: constraints.maxWidth > 1024
-//       ? 4
-//       : constraints.maxWidth > 800
-//           ? 3
-//           : constraints.maxWidth > 500
-//               ? 1
-//               : 1,
-//   // childAspectRatio: 5,
-
-// })

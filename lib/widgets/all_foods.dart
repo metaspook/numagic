@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:numagic/models/food.dart';
+import 'package:numagic/pages/food_table_page.dart';
 import 'package:numagic/utils/methods.dart';
 import 'package:numagic/widgets/appbar_mod.dart';
 import 'package:numagic/widgets/translucent_background.dart';
@@ -31,7 +32,9 @@ class _AllFoodsState extends State<AllFoods> {
       // appBar: AppBarMod(title: 'Food Grid'),
       appBar: AppBarMod(
         title: 'Choose Food',
-        onTap: () {},
+        routeOnTap:
+            // () {},
+            () => FoodTablePage(),
       ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       // floatingActionButton: FloatingActionButton.extended(
@@ -44,6 +47,7 @@ class _AllFoodsState extends State<AllFoods> {
       //   icon: Icon(Icons.done),
       // ),
       body: TranslucentBackground(
+        blurFilter: [2, 2],
         child: Container(
           color: Colors.transparent,
           child: Padding(
@@ -64,43 +68,45 @@ class _AllFoodsState extends State<AllFoods> {
                         ),
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.white24),
-                            ),
-                            //   border: Border.all(
-                            //     color: Colors.black,
-                            //     width: 1,
-                            //   ),
-                            // ),
-                            // color: Methods.colorPrimariesIndex(index),
-                            // alignment: Alignment.center,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8, right: 8, top: 4),
-                              child: Column(
-                                // crossAxisAlignment: CrossAxisAlignment.center,
-                                // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  const SizedBox(height: 10),
-                                  Expanded(
-                                      child: Image.asset(
-                                    snapshot.data![index].image,
-                                    fit: BoxFit.fill,
-                                    // alignment: Alignment.center,
-                                  )),
-                                  const SizedBox(height: 2.5),
-                                  Expanded(
-                                    child: Text(
-                                      snapshot.data![index].name,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color: Colors.white70, fontSize: 12),
-                                    ),
+                          return
+                              // Container(
+                              // decoration: BoxDecoration(
+                              //   color: Colors.black26,
+                              //   border: Border.all(color: Colors.white24),
+                              // ),
+                              //   border: Border.all(
+                              //     color: Colors.black,
+                              //     width: 1,
+                              //   ),
+                              // ),
+                              // color: Methods.colorPrimariesIndex(index),
+                              // alignment: Alignment.center,
+                              // child:
+                              Column(
+                            // crossAxisAlignment: CrossAxisAlignment.center,
+                            // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              const SizedBox(height: 10),
+                              Expanded(
+                                  child: Image.asset(
+                                snapshot.data![index].image,
+                                fit: BoxFit.fill,
+                                // alignment: Alignment.center,
+                              )),
+                              const SizedBox(height: 2.5),
+                              Expanded(
+                                child: Text(
+                                  snapshot.data![index].name,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
+                            ],
+                            // ),
                           );
                         });
                   } else if (snapshot.hasError) {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:velocity_x/velocity_x.dart';
-import 'package:numagic/utils/router.dart';
+import 'package:numagic/pages/home.dart';
 
 void main() {
   // Vx.setPathUrlStrategy();
@@ -12,11 +11,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: true,
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'NuMagic',
-      routeInformationParser: VxInformationParser(),
-      routerDelegate: navigator,
+      home: HomePage(),
     );
   }
 }

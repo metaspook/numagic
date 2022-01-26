@@ -3,8 +3,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class TranslucentBackground extends StatelessWidget {
-  const TranslucentBackground({Key? key, this.child}) : super(key: key);
+  const TranslucentBackground(
+      {Key? key, this.child, this.blurFilter = const [4, 4]})
+      : super(key: key);
   final Widget? child;
+  final List<double> blurFilter;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +21,8 @@ class TranslucentBackground extends StatelessWidget {
           fit: BoxFit.cover,
         ),
         BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+          filter:
+              ImageFilter.blur(sigmaX: blurFilter[0], sigmaY: blurFilter[1]),
           child: Align(
             alignment: Alignment.topCenter,
             child: child,

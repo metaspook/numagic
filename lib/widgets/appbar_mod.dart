@@ -1,28 +1,35 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:numagic/pages/food_table_page.dart';
 
 class AppBarMod extends StatelessWidget with PreferredSizeWidget {
 // class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
-  const AppBarMod({Key? key, required this.title, this.onTap})
-      : super(key: key);
+  AppBarMod({Key? key, required this.title, this.routeOnTap}) : super(key: key);
   final String title;
-  final Function? onTap;
+  Function? routeOnTap;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
+    // onTap = () => Navigator.push(
+    //     context, MaterialPageRoute(builder: (context) => FoodTablePage()));
     return AppBar(
       // toolbarOpacity: 0.9,
       // bottomOpacity: 0.1,
       // actionsIconTheme: const IconThemeData(color: Colors.white60),
       actions: [
-        if (onTap != null)
+        if (routeOnTap != null)
           Padding(
             padding: const EdgeInsets.only(right: 25),
             child: GestureDetector(
-              onTap: onTap!(),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => routeOnTap!(),
+                ),
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const <Widget>[
