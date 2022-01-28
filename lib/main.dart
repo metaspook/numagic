@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:numagic/pages/home.dart';
 
 void main() {
-  // Vx.setPathUrlStrategy();
   runApp(const MyApp());
 }
 
@@ -14,11 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'NuMagic',
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
-
-// Container(
- //   width: MediaQuery.of(context).size.width,
- //  height: MediaQuery.of(context).padding.top,

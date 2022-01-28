@@ -1,22 +1,19 @@
 import 'dart:convert';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:numagic/models/food.dart';
-import 'package:numagic/pages/food_table_page.dart';
-import 'package:numagic/utils/methods.dart';
+import 'package:numagic/pages/food_table.dart';
 import 'package:numagic/widgets/appbar_mod.dart';
 import 'package:numagic/widgets/translucent_background.dart';
 
-class AllFoods extends StatefulWidget {
-  const AllFoods({Key? key}) : super(key: key);
+class FoodGridPage extends StatefulWidget {
+  const FoodGridPage({Key? key}) : super(key: key);
 
   @override
-  State<AllFoods> createState() => _AllFoodsState();
+  State<FoodGridPage> createState() => _FoodGridPageState();
 }
 
-class _AllFoodsState extends State<AllFoods> {
+class _FoodGridPageState extends State<FoodGridPage> {
   late final Future<List<Food>> _foodGrid;
 
   @override
@@ -29,25 +26,12 @@ class _AllFoodsState extends State<AllFoods> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // appBar: AppBarMod(title: 'Food Grid'),
       appBar: AppBarMod(
         title: 'Choose Food',
-        routeOnTap:
-            // () {},
-            () => FoodTablePage(),
+        routeOnTap: () => const FoodTablePage(),
       ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      // floatingActionButton: FloatingActionButton.extended(
-      //   label: Text("I've Chosen"),
-      //   onPressed: () {
-      //     setState(() {
-      //       // _active = !_active;
-      //     });
-      //   },
-      //   icon: Icon(Icons.done),
-      // ),
       body: TranslucentBackground(
-        blurFilter: [2, 2],
+        blurFilter: const [2, 2],
         child: Container(
           color: Colors.transparent,
           child: Padding(
@@ -68,30 +52,13 @@ class _AllFoodsState extends State<AllFoods> {
                         ),
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
-                          return
-                              // Container(
-                              // decoration: BoxDecoration(
-                              //   color: Colors.black26,
-                              //   border: Border.all(color: Colors.white24),
-                              // ),
-                              //   border: Border.all(
-                              //     color: Colors.black,
-                              //     width: 1,
-                              //   ),
-                              // ),
-                              // color: Methods.colorPrimariesIndex(index),
-                              // alignment: Alignment.center,
-                              // child:
-                              Column(
-                            // crossAxisAlignment: CrossAxisAlignment.center,
-                            // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          return Column(
                             children: [
                               const SizedBox(height: 10),
                               Expanded(
                                   child: Image.asset(
                                 snapshot.data![index].image,
                                 fit: BoxFit.fill,
-                                // alignment: Alignment.center,
                               )),
                               const SizedBox(height: 2.5),
                               Expanded(
@@ -106,7 +73,6 @@ class _AllFoodsState extends State<AllFoods> {
                                 ),
                               ),
                             ],
-                            // ),
                           );
                         });
                   } else if (snapshot.hasError) {

@@ -1,9 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:numagic/pages/food_table_page.dart';
 
 class AppBarMod extends StatelessWidget with PreferredSizeWidget {
-// class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   AppBarMod({Key? key, required this.title, this.routeOnTap}) : super(key: key);
   final String title;
   Function? routeOnTap;
@@ -13,12 +11,7 @@ class AppBarMod extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    // onTap = () => Navigator.push(
-    //     context, MaterialPageRoute(builder: (context) => FoodTablePage()));
     return AppBar(
-      // toolbarOpacity: 0.9,
-      // bottomOpacity: 0.1,
-      // actionsIconTheme: const IconThemeData(color: Colors.white60),
       actions: [
         if (routeOnTap != null)
           Padding(
@@ -50,11 +43,7 @@ class AppBarMod extends StatelessWidget with PreferredSizeWidget {
             ),
           ),
       ],
-      // automaticallyImplyLeading: false,
-      // shadowColor: Colors.black,
       backgroundColor: Colors.black.withOpacity(0.1),
-      // backgroundColor: Colors.white.withOpacity(0.1),
-      // backgroundColor: Colors.transparent,
       iconTheme: const IconThemeData(color: Colors.white60),
       centerTitle: true,
       elevation: 10,
@@ -63,23 +52,14 @@ class AppBarMod extends StatelessWidget with PreferredSizeWidget {
               fontSize: 30,
               fontWeight: FontWeight.bold,
               color: Colors.white60)),
-      // systemOverlayStyle: SystemUiOverlayStyle.light,
       flexibleSpace: ClipRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
           child: Container(
             color: Colors.white.withOpacity(0.1),
-            // color: Colors.black.withOpacity(0.1),
-            // color: Colors.transparent,
           ),
         ),
       ),
     );
   }
 }
-
-  // @Deprecated(
-  //   'This property is no longer used, please use toolbarTextStyle and titleTextStyle instead. '
-  //   'This feature was deprecated after v2.4.0-0.0.pre.',
-  // )
-  // final TextTheme? textTheme;

@@ -1,38 +1,45 @@
 import 'dart:ui';
+import 'dart:convert';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:numagic/models/food.dart';
 import 'package:numagic/utils/constants.dart';
 import 'package:numagic/widgets/custom_divider.dart';
-import 'package:numagic/widgets/number_table.dart';
+import 'package:numagic/widgets/food_table.dart';
 import 'package:numagic/widgets/translucent_background.dart';
 
-class NumberTablePage extends StatefulWidget {
-  const NumberTablePage({Key? key}) : super(key: key);
+class FoodTablePage extends StatefulWidget {
+  const FoodTablePage({Key? key}) : super(key: key);
 
   @override
-  _NumberTablePageState createState() => _NumberTablePageState();
+  _FoodTablePageState createState() => _FoodTablePageState();
 }
 
-class _NumberTablePageState extends State<NumberTablePage> {
+class _FoodTablePageState extends State<FoodTablePage> {
   int _tableIndex = 0;
-  final List<int> _numberList =
-      List<int>.generate(63, (index) => index + 1, growable: false);
+
+  final List<Food> _foodList = <Food>[];
   late final List<bool> _checkboxList;
-  String? _outNumber;
+  String? _outImage, _outName;
 
   @override
   void initState() {
-    super.initState();
     _checkboxList = List.generate(
-      Constants.numberTableSet.length,
+      Constants.foodTableSet.length,
       (index) => false,
       growable: false,
     );
+    _fetchFoodList();
+    super.initState();
   }
+
+  Future<List<Food>> _futureConverter(List<Food> value) async => value;
 
   @override
   Widget build(BuildContext context) {
-    final Size _size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -78,7 +85,7 @@ class _NumberTablePageState extends State<NumberTablePage> {
                 heroTag: null,
                 child: const Icon(Icons.done_outline_rounded),
                 backgroundColor: Colors.white24,
-                onPressed: () => _submitTable(foodList: _numberList),
+                onPressed: () => _submitTable(foodList: _foodList),
               ),
               FloatingActionButton(
                 heroTag: null,
@@ -97,43 +104,52 @@ class _NumberTablePageState extends State<NumberTablePage> {
               ),
             ],
           ),
-          SizedBox(height: _size.height * 0.15),
+          SizedBox(height: size.height * 0.15),
         ],
       ),
       body: TranslucentBackground(
         blurFilter: const [2, 2],
         child: Column(
           children: <Widget>[
-            const SizedBox(height: kToolbarHeight * 1.25),
-            Flexible(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Swiper(
-                  index: _tableIndex,
-                  onIndexChanged: (index) => setState(() {
-                    _tableIndex = index;
-                  }),
-                  control: const SwiperControl(
-                      padding: EdgeInsets.only(left: 10),
-                      size: 40,
-                      color: Colors.white60),
-                  pagination: const SwiperPagination(
-                    builder: DotSwiperPaginationBuilder(
-                        color: Colors.white30, activeColor: Colors.white),
-                  ),
-                  itemCount: Constants.numberTableSet.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 50),
-                      child: NumberTableWidget(
-                        itemTable: Constants.numberTableSet.elementAt(index),
-                        itemList: _numberList,
+            FutureBuilder<List<Food>>(
+              future: _futureConverter(_foodList),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 125, bottom: 25),
+                      child: Swiper(
+                        index: _tableIndex,
+                        onIndexChanged: (index) => setState(() {
+                          _tableIndex = index;
+                        }),
+                        control: const SwiperControl(
+                            padding: EdgeInsets.only(left: 10),
+                            size: 40,
+                            color: Colors.white60),
+                        pagination: const SwiperPagination(
+                          builder: DotSwiperPaginationBuilder(
+                              color: Colors.white30, activeColor: Colors.white),
+                        ),
+                        itemCount: Constants.foodTableSet.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: FoodTableWidget(
+                              itemTable:
+                                  Constants.foodTableSet.elementAt(index),
+                              itemList: snapshot.data!,
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
-              ),
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text("${snapshot.error}");
+                }
+                return const CircularProgressIndicator();
+              },
             ),
           ],
         ),
@@ -141,7 +157,7 @@ class _NumberTablePageState extends State<NumberTablePage> {
     );
   }
 
-  void _showDialog({required String title, required String number}) {
+  void _showDialog([String? title, String? image, String? name]) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -153,22 +169,29 @@ class _NumberTablePageState extends State<NumberTablePage> {
           title: Column(
             children: [
               Text(
-                title,
+                title!,
                 style: const TextStyle(
                   fontSize: 25,
                 ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 5),
-              const CustomDivider(),
+              CustomDivider(),
             ],
           ),
-          content: Text(
-            number,
-            textAlign: TextAlign.center,
-            style: _outNumber == null
-                ? Theme.of(context).textTheme.headline4
-                : Theme.of(context).textTheme.headline1,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (image != null)
+                Image.asset(
+                  image,
+                ),
+              Text(
+                name!,
+                style:
+                    const TextStyle(fontSize: 32, fontWeight: FontWeight.w500),
+              )
+            ],
           ),
           actions: [
             GestureDetector(
@@ -189,6 +212,14 @@ class _NumberTablePageState extends State<NumberTablePage> {
     );
   }
 
+  Future<void> _fetchFoodList() async {
+    final String response =
+        await rootBundle.loadString('assets/json/food_list.json');
+
+    _foodList
+        .addAll(<Food>[for (var i in json.decode(response)) Food.fromMap(i)]);
+  }
+
   void _setCheckbox(
       {required List list, required int index, required bool value}) {
     setState(() => list[index] = value);
@@ -200,22 +231,26 @@ class _NumberTablePageState extends State<NumberTablePage> {
 
   void _submitTable({required List foodList}) {
     int sum = 0;
-    for (var i = 0; i < Constants.numberTableSet.length; i++) {
+    for (var i = 0; i < Constants.foodTableSet.length; i++) {
       if (_checkboxList[i] == true) {
-        sum += Constants.numberTableSet.elementAt(i).elementAt(0).elementAt(0);
+        sum += Constants.foodTableSet.elementAt(i).elementAt(0).elementAt(5);
       }
     }
-    if (sum == 0 || sum > _numberList.length) {
-      _outNumber = null;
+    if (sum == 0 || sum > foodList.length) {
+      _outImage = null;
+      _outName = null;
       _showDialog(
-        title: '⚠️  Secret Number ⚠️',
-        number: 'Invalid table selection.',
+        '⚠️ Secret Food ⚠️',
+        null,
+        'Invalid table selection.',
       );
     } else {
-      _outNumber = _numberList[sum - 1].toString();
+      _outImage = foodList[sum - 1].image;
+      _outName = foodList[sum - 1].name;
       _showDialog(
-        title: '🪄 Secret Number 🪄',
-        number: _outNumber!,
+        '🪄 Secret Food 🪄',
+        _outImage!,
+        _outName!,
       );
     }
   }
@@ -225,7 +260,8 @@ class _NumberTablePageState extends State<NumberTablePage> {
       for (var i = 0; i < Constants.foodTableSet.length; i++) {
         _checkboxList[i] = false;
       }
-      _outNumber = null;
+      _outImage = null;
+      _outName = null;
     });
     Navigator.pop(context);
   }

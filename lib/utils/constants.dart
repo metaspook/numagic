@@ -107,8 +107,3 @@ class Constants {
     }
   };
 }
-
-// void main(List<String> args) {
-//   Constants.dd.toList().shuffle();
-//   print(Constants.dd);
-// }

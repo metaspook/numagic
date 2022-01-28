@@ -1,13 +1,6 @@
-import 'dart:convert';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:numagic/models/food.dart';
-import 'package:numagic/pages/food_table_page.dart';
-import 'package:numagic/utils/methods.dart';
-import 'package:numagic/widgets/all_foods.dart';
-import 'package:numagic/widgets/all_number.dart';
+import 'package:numagic/pages/food_grid.dart';
+import 'package:numagic/pages/number_grid.dart';
 import 'package:numagic/widgets/appbar_mod.dart';
 import 'package:numagic/widgets/translucent_background.dart';
 
@@ -19,14 +12,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late final Future<List<Food>> _foodGrid;
   bool _isAbout = true;
-
-  @override
-  void initState() {
-    _foodGrid = _fetchFoods();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,20 +20,9 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // appBar: AppBarMod(title: 'Food Grid'),
       appBar: AppBarMod(title: 'NuMagic 🪄'),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      // floatingActionButton: FloatingActionButton.extended(
-      //   label: Text("I've Chosen"),
-      //   onPressed: () {
-      //     setState(() {
-      //       // _active = !_active;
-      //     });
-      //   },
-      //   icon: Icon(Icons.done),
-      // ),
       body: TranslucentBackground(
-        blurFilter: [0, 0],
+        blurFilter: const [0, 0],
         child: Container(
           color: Colors.transparent,
           child: Padding(
@@ -58,14 +33,13 @@ class _HomePageState extends State<HomePage> {
             child: ListView(
               children: [
                 Container(
-                  padding: EdgeInsets.all(15),
-                  margin: EdgeInsets.only(bottom: 80),
-                  // padding: EdgeInsets.all(_size.height * 0.0125),
+                  padding: const EdgeInsets.all(15),
+                  margin: const EdgeInsets.only(bottom: 80),
                   decoration: BoxDecoration(
                     color: Colors.black26,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Text(
+                  child: Text(
                     """
  How To Play:
  ------------
@@ -76,15 +50,13 @@ class _HomePageState extends State<HomePage> {
  3. Press ✓, I'll show the MAGIC 🪄""",
                     style: TextStyle(
                       color: Colors.white70,
-                      fontSize: 17.5,
+                      fontSize: _size.width * 0.04475,
                       fontFamily: 'Consolas',
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                // SizedBox(height: 20),
-
-                Text(
+                const Text(
                   'Grid Type',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -93,50 +65,34 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 20),
-
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
-                      // height: 65,
-                      // width: 170,
-
-                      // padding: const EdgeInsets.symmetric(
-                      //     horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
-                        // shape: BoxShape.circle,
                         border: Border.all(color: Colors.black12, width: 10),
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(20),
                             bottomRight: Radius.circular(20)),
                       ),
                       child: TextButton(
-                        onPressed: () =>
-                            // () {},
-                            Navigator.push(
+                        onPressed: () => Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => AllNumber()),
+                          MaterialPageRoute(
+                              builder: (context) => const NumberGridPage()),
                         ),
-                        // showCupertinoModalPopup(
-                        //     context: context,
-                        //     builder: (context) => const FoodTablePage()),
-                        child: Text(
+                        child: const Text(
                           'Number',
-                          // textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.white54, fontSize: 40),
                         ),
                       ),
                     ),
-                    SizedBox(width: 15),
+                    const SizedBox(width: 15),
                     Container(
-                      // height: 65,
-                      // width: 170,
-                      // padding: const EdgeInsets.symmetric(
-                      //     horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.black12, width: 10),
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(20),
                             bottomRight: Radius.circular(20)),
                       ),
@@ -144,10 +100,11 @@ class _HomePageState extends State<HomePage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => AllFoods()),
+                            MaterialPageRoute(
+                                builder: (context) => const FoodGridPage()),
                           );
                         },
-                        child: Text(
+                        child: const Text(
                           'Food',
                           // textAlign: TextAlign.center,
                           style: TextStyle(
@@ -159,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                SizedBox(height: _size.height * 0.3),
+                const SizedBox(height: 125),
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -170,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           // crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
+                          children: const [
                             Icon(
                               Icons.info_outlined,
                               color: Colors.white60,
@@ -183,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         )
-                      : Text(
+                      : const Text(
                           """
 Made with  ❤️  from  🇧🇩
 Copyright © 2022, Metaspook""",
@@ -197,11 +154,5 @@ Copyright © 2022, Metaspook""",
         ),
       ),
     );
-  }
-
-  Future<List<Food>> _fetchFoods() async {
-    final String response =
-        await rootBundle.loadString('assets/json/food_list.json', cache: true);
-    return [for (var i in json.decode(response)) Food.fromMap(i)];
   }
 }

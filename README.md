@@ -1,16 +1,19 @@
-# NuMagic
+# NuMagic 🪄
+A secret Food and Number revealer magic 🕹️ game.
 
-The magic of numbers game.
+><b>Platforms:</b> Android, iOS, Web<br><b>Language/SDK:</b> Dart, Flutter
 
-## Getting Started
+## **🎈 Screenshots**
+<img alt="&nbsp;Missing screenshot!" src="screenshots/screenshot_00.gif" width="204" height="430">&emsp;&emsp;&emsp;<img alt="&nbsp;Missing screenshot!" src="screenshots/screenshot_01.gif" width="204" height="430"><br>
 
-This project is a starting point for a Flutter application.
+## **🎈 How to play?**
+1. Select grid type and Keep secret a Food or Number, Press DONE.
+2. Select all the tables containing your secret Food or Number.
+3. Press ✓, NuMagic will reveal your secret 🪄
 
-A few resources to get you started if this is your first Flutter project:
+## **🎈 Remarks**
+<details><summary>Click to collapse/fold.</summary>
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+* Packages: card_swiper
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+</details>
