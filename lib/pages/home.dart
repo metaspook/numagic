@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Size _size = MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
  3. Press ✓, I'll show the MAGIC 🪄""",
                     style: TextStyle(
                       color: Colors.white70,
-                      fontSize: _size.width * 0.04475,
+                      fontSize: size.width * 0.04475,
                       fontFamily: 'Consolas',
                       fontWeight: FontWeight.bold,
                     ),
