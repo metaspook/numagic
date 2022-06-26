@@ -20,6 +20,9 @@
 # is commented out by default.
 #.vscode/
 
+# Keystore related
+key.properties
+
 # Firebase related
 google-services.json
 GoogleService-Info.plist
