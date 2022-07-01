@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:numagic/models/food.dart';
@@ -89,6 +90,6 @@ class _FoodGridPageState extends State<FoodGridPage> {
   Future<List<Food>> _fetchFoods() async {
     final String response =
         await rootBundle.loadString('assets/json/food_list.json', cache: true);
-    return [for (var i in json.decode(response)) Food.fromMap(i)];
+    return [for (var i in json.decode(response)) Food.fromJson(i)];
   }
 }

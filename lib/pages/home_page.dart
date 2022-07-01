@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:numagic/pages/food_grid.dart';
-import 'package:numagic/pages/number_grid.dart';
+import 'package:numagic/pages/pages.dart';
+import 'package:numagic/utils/utils.dart';
 import 'package:numagic/widgets/appbar_mod.dart';
 import 'package:numagic/widgets/translucent_background.dart';
 
@@ -97,12 +97,13 @@ class _HomePageState extends State<HomePage> {
                             bottomRight: Radius.circular(20)),
                       ),
                       child: TextButton(
-                        onPressed: () {
+                        onPressed: () async {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => const FoodGridPage()),
                           );
+                          await Music().player.play(Music().audioClick);
                         },
                         child: const Text(
                           'Food',

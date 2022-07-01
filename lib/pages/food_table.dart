@@ -1,10 +1,11 @@
-import 'dart:ui';
 import 'dart:convert';
+import 'dart:ui';
+
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:numagic/models/food.dart';
-import 'package:numagic/utils/constants.dart';
+import 'package:numagic/utils/utils.dart';
 import 'package:numagic/widgets/custom_divider.dart';
 import 'package:numagic/widgets/food_table.dart';
 import 'package:numagic/widgets/translucent_background.dart';
@@ -49,9 +50,18 @@ class _FoodTablePageState extends State<FoodTablePage> {
             child: Transform.scale(
               scale: 1.5,
               child: Checkbox(
+                side: const BorderSide(color: Colors.white60, width: 2),
+                activeColor: Colors.white60,
+                checkColor: const Color(0xFF2F3857),
                 value: _getCheckbox(list: _checkboxList, index: _tableIndex),
-                onChanged: (value) => _setCheckbox(
-                    list: _checkboxList, index: _tableIndex, value: value!),
+                onChanged: (value) async {
+                  if (value!) await Music().player.play(Music().audioClick);
+                  _setCheckbox(
+                    list: _checkboxList,
+                    index: _tableIndex,
+                    value: value,
+                  );
+                },
               ),
             ),
           ),
@@ -83,24 +93,27 @@ class _FoodTablePageState extends State<FoodTablePage> {
             children: <Widget>[
               FloatingActionButton(
                 heroTag: null,
-                child: const Icon(Icons.done_outline_rounded),
                 backgroundColor: Colors.white24,
-                onPressed: () => _submitTable(foodList: _foodList),
+                onPressed: () async {
+                  // await Music().player.play(Music().audioClick);
+                  _submitTable(foodList: _foodList);
+                },
+                child: const Icon(Icons.done_outline_rounded),
               ),
               FloatingActionButton(
                 heroTag: null,
-                child: const Icon(Icons.refresh),
                 backgroundColor: Colors.white24,
                 onPressed: () {
                   _resetTable();
                 },
+                child: const Icon(Icons.refresh),
               ),
               FloatingActionButton(
                 heroTag: null,
-                child: const Icon(Icons.home),
                 backgroundColor: Colors.white24,
                 onPressed: () => Navigator.of(context)
                     .popUntil((Route route) => route.isFirst),
+                child: const Icon(Icons.home),
               ),
             ],
           ),
@@ -120,9 +133,12 @@ class _FoodTablePageState extends State<FoodTablePage> {
                       padding: const EdgeInsets.only(top: 125, bottom: 25),
                       child: Swiper(
                         index: _tableIndex,
-                        onIndexChanged: (index) => setState(() {
-                          _tableIndex = index;
-                        }),
+                        onIndexChanged: (index) async {
+                          setState(() {
+                            _tableIndex = index;
+                          });
+                          await Music().player.play(Music().audioClick);
+                        },
                         control: const SwiperControl(
                             padding: EdgeInsets.only(left: 10),
                             size: 40,
@@ -176,7 +192,7 @@ class _FoodTablePageState extends State<FoodTablePage> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 5),
-              CustomDivider(),
+              const CustomDivider(),
             ],
           ),
           content: Column(
@@ -217,7 +233,7 @@ class _FoodTablePageState extends State<FoodTablePage> {
         await rootBundle.loadString('assets/json/food_list.json');
 
     _foodList
-        .addAll(<Food>[for (var i in json.decode(response)) Food.fromMap(i)]);
+        .addAll(<Food>[for (var i in json.decode(response)) Food.fromJson(i)]);
   }
 
   void _setCheckbox(
@@ -229,7 +245,7 @@ class _FoodTablePageState extends State<FoodTablePage> {
     return list[index];
   }
 
-  void _submitTable({required List foodList}) {
+  Future<void> _submitTable({required List foodList}) async {
     int sum = 0;
     for (var i = 0; i < Constants.foodTableSet.length; i++) {
       if (_checkboxList[i] == true) {
@@ -239,6 +255,7 @@ class _FoodTablePageState extends State<FoodTablePage> {
     if (sum == 0 || sum > foodList.length) {
       _outImage = null;
       _outName = null;
+      await Music().player.play(Music().audioInvalid);
       _showDialog(
         '⚠️ Secret Food ⚠️',
         null,
@@ -247,6 +264,7 @@ class _FoodTablePageState extends State<FoodTablePage> {
     } else {
       _outImage = foodList[sum - 1].image;
       _outName = foodList[sum - 1].name;
+      await Music().player.play(Music().audioSuccess);
       _showDialog(
         '🪄 Secret Food 🪄',
         _outImage!,

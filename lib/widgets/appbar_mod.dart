@@ -1,5 +1,7 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:numagic/utils/utils.dart';
 
 class AppBarMod extends StatelessWidget with PreferredSizeWidget {
   AppBarMod({Key? key, required this.title, this.routeOnTap}) : super(key: key);
@@ -17,12 +19,15 @@ class AppBarMod extends StatelessWidget with PreferredSizeWidget {
           Padding(
             padding: const EdgeInsets.only(right: 25),
             child: GestureDetector(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => routeOnTap!(),
-                ),
-              ),
+              onTap: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => routeOnTap!(),
+                  ),
+                );
+                await Music().player.play(Music().audioClick);
+              },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const <Widget>[

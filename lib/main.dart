@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:numagic/pages/home.dart';
+import 'package:numagic/controllers/controllers.dart';
+import 'package:numagic/nu_magic_app.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'NuMagic',
-      home: HomePage(),
-    );
-  }
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<FoodTableController>(
+          create: (_) => FoodTableController(),
+        ),
+        ChangeNotifierProvider<NumberTableController>(
+          create: (_) => NumberTableController(),
+        ),
+      ],
+      child: const NuMagicApp(),
+    ),
+  );
 }
