@@ -39,7 +39,7 @@ class NumberTableWidget extends StatelessWidget {
           "$name",
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Methods.colorPrimariesRandom(),
+            color: Methods().colorPrimariesRandom(),
             fontSize: 35,
             fontWeight: FontWeight.bold,
           ),

@@ -1,7 +1,8 @@
 import 'dart:ui';
+
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
-import 'package:numagic/utils/constants.dart';
+import 'package:numagic/utils/utils.dart';
 import 'package:numagic/widgets/custom_divider.dart';
 import 'package:numagic/widgets/number_table.dart';
 import 'package:numagic/widgets/translucent_background.dart';
@@ -24,7 +25,7 @@ class _NumberTablePageState extends State<NumberTablePage> {
   void initState() {
     super.initState();
     _checkboxList = List.generate(
-      Constants.numberTableSet.length,
+      Constants().numberTableSet.length,
       (index) => false,
       growable: false,
     );
@@ -32,7 +33,7 @@ class _NumberTablePageState extends State<NumberTablePage> {
 
   @override
   Widget build(BuildContext context) {
-    final Size _size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -76,28 +77,28 @@ class _NumberTablePageState extends State<NumberTablePage> {
             children: <Widget>[
               FloatingActionButton(
                 heroTag: null,
-                child: const Icon(Icons.done_outline_rounded),
                 backgroundColor: Colors.white24,
                 onPressed: () => _submitTable(foodList: _numberList),
+                child: const Icon(Icons.done_outline_rounded),
               ),
               FloatingActionButton(
                 heroTag: null,
-                child: const Icon(Icons.refresh),
                 backgroundColor: Colors.white24,
                 onPressed: () {
                   _resetTable();
                 },
+                child: const Icon(Icons.refresh),
               ),
               FloatingActionButton(
                 heroTag: null,
-                child: const Icon(Icons.home),
                 backgroundColor: Colors.white24,
                 onPressed: () => Navigator.of(context)
                     .popUntil((Route route) => route.isFirst),
+                child: const Icon(Icons.home),
               ),
             ],
           ),
-          SizedBox(height: _size.height * 0.15),
+          SizedBox(height: size.height * 0.15),
         ],
       ),
       body: TranslucentBackground(
@@ -121,13 +122,13 @@ class _NumberTablePageState extends State<NumberTablePage> {
                     builder: DotSwiperPaginationBuilder(
                         color: Colors.white30, activeColor: Colors.white),
                   ),
-                  itemCount: Constants.numberTableSet.length,
+                  itemCount: Constants().numberTableSet.length,
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 50),
                       child: NumberTableWidget(
-                        itemTable: Constants.numberTableSet.elementAt(index),
+                        itemTable: Constants().numberTableSet.elementAt(index),
                         itemList: _numberList,
                       ),
                     );
@@ -200,9 +201,10 @@ class _NumberTablePageState extends State<NumberTablePage> {
 
   void _submitTable({required List foodList}) {
     int sum = 0;
-    for (var i = 0; i < Constants.numberTableSet.length; i++) {
+    for (var i = 0; i < Constants().numberTableSet.length; i++) {
       if (_checkboxList[i] == true) {
-        sum += Constants.numberTableSet.elementAt(i).elementAt(0).elementAt(0);
+        sum +=
+            Constants().numberTableSet.elementAt(i).elementAt(0).elementAt(0);
       }
     }
     if (sum == 0 || sum > _numberList.length) {
@@ -222,7 +224,7 @@ class _NumberTablePageState extends State<NumberTablePage> {
 
   void _resetTable() {
     setState(() {
-      for (var i = 0; i < Constants.foodTableSet.length; i++) {
+      for (var i = 0; i < Constants().foodTableSet.length; i++) {
         _checkboxList[i] = false;
       }
       _outNumber = null;

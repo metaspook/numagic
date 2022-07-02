@@ -52,7 +52,7 @@ class _NumberGridPageState extends State<NumberGridPage> {
                     child: Text(
                       "${_numberList[index] + 1}",
                       style: TextStyle(
-                        color: Methods.colorPrimariesRandomIndex(index),
+                        color: Methods().colorPrimariesRandomIndex(index),
                         fontSize: 35,
                         fontWeight: FontWeight.bold,
                       ),

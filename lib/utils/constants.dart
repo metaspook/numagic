@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Constants {
-  static const List<MaterialColor> colors = <MaterialColor>[
+  Constants._();
+  factory Constants() => Constants._();
+
+  final colors = const <MaterialColor>[
     // Activated 15 10 9 8 7 6 5 1 0 looks better.
     Colors.red,
     Colors.pink,
@@ -23,7 +26,7 @@ class Constants {
     // Colors.blueGrey
   ];
 
-  static const Set<Set<Set<int>>> foodTableSet = {
+  final foodTableSet = const <Set<Set<int>>>{
     {
       {3, 5, 7, 9, 11, 1},
       {13, 15, 17, 19, 21, 23},
@@ -68,7 +71,7 @@ class Constants {
     }
   };
 
-  static const Set<Set<Set<int>>> numberTableSet = {
+  final numberTableSet = const <Set<Set<int>>>{
     {
       {1, 3, 5, 7, 9, 11, 13, 15},
       {17, 19, 21, 23, 25, 27, 29, 31},

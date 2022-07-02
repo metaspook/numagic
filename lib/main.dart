@@ -7,6 +7,12 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider<AppBarController>(
+          create: (_) => AppBarController(),
+        ),
+        ChangeNotifierProvider<HomeController>(
+          create: (_) => HomeController(),
+        ),
         ChangeNotifierProvider<FoodTableController>(
           create: (_) => FoodTableController(),
         ),
