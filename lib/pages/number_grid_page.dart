@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:numagic/pages/number_table.dart';
+import 'package:numagic/pages/number_table_page.dart';
 import 'package:numagic/utils/methods.dart';
 import 'package:numagic/widgets/appbar_mod.dart';
 import 'package:numagic/widgets/translucent_background.dart';

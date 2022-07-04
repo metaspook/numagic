@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:numagic/controllers/controllers.dart';
 import 'package:numagic/pages/services/services.dart';
+import 'package:numagic/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class FloatingActionButtonBar extends StatelessWidget {
-  const FloatingActionButtonBar({Key? key}) : super(key: key);
+  const FloatingActionButtonBar(this.tableType, {Key? key}) : super(key: key);
+  final TableType tableType;
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +23,15 @@ class FloatingActionButtonBar extends StatelessWidget {
               return FloatingActionButton(
                 heroTag: null,
                 backgroundColor: Colors.white24,
-                onPressed: () async =>
-                    context.read<FoodTableController>().submitTable(
+                onPressed: () async => tableType == TableType.food
+                    ? context.read<TableController>().submitFoodTable(
                           context,
                           foodList: await DataService().fetchFoods(),
+                          checkboxList: checkboxList,
+                        )
+                    : context.read<TableController>().submitNumberTable(
+                          context,
+                          numberList: Methods().numberList,
                           checkboxList: checkboxList,
                         ),
                 child: const Icon(Icons.done_outline_rounded),
@@ -34,8 +41,9 @@ class FloatingActionButtonBar extends StatelessWidget {
               heroTag: null,
               backgroundColor: Colors.white24,
               onPressed: () {
-                context.read<FoodTableController>().setTableIndex(0);
-                context.read<AppBarController>().resetCheckbox(context);
+                context.read<TableController>().setTableIndex(0);
+                context.read<AppBarController>().resetCheckbox();
+                Navigator.pop(context);
               },
               child: const Icon(Icons.refresh),
             ),

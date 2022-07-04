@@ -13,8 +13,8 @@ void main() {
         ChangeNotifierProvider<HomeController>(
           create: (_) => HomeController(),
         ),
-        ChangeNotifierProvider<FoodTableController>(
-          create: (_) => FoodTableController(),
+        ChangeNotifierProvider<TableController>(
+          create: (_) => TableController(),
         ),
         ChangeNotifierProvider<NumberTableController>(
           create: (_) => NumberTableController(),

@@ -8,6 +8,10 @@ class Methods {
   Methods._();
   factory Methods() => Methods._();
 
+  final List<int> _numberList =
+      List<int>.generate(63, (index) => index + 1, growable: false);
+  List<int> get numberList => _numberList;
+
   MaterialColor colorRandom() =>
       Constants().colors[Random().nextInt(Constants().colors.length)];
 
@@ -24,8 +28,56 @@ class Methods {
     return primaries[index % primaries.length];
   }
 
-  void showDialogMod(BuildContext context,
-      {String? title, String? image, String? name}) {
+  void dialogInvalidTable(
+    BuildContext context, {
+    required String title,
+    required String msg,
+  }) {
+    final content = Text(
+      msg,
+      textAlign: TextAlign.center,
+      style: Theme.of(context).textTheme.headline4,
+    );
+    _showDialogMod(context, title: title, content: content);
+  }
+
+  void dialogFoodTable(
+    BuildContext context, {
+    required String title,
+    String? image,
+    required String name,
+  }) {
+    final content = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (image != null) Image.asset(image),
+        Text(
+          name,
+          style: const TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.w500,
+          ),
+        )
+      ],
+    );
+    _showDialogMod(context, title: title, content: content);
+  }
+
+  void dialogNumberTable(
+    BuildContext context, {
+    required String title,
+    required String number,
+  }) {
+    final content = Text(
+      number,
+      textAlign: TextAlign.center,
+      style: Theme.of(context).textTheme.headline4,
+    );
+    _showDialogMod(context, title: title, content: content);
+  }
+
+  void _showDialogMod(BuildContext context,
+      {String title = '', Widget? content}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -37,7 +89,7 @@ class Methods {
           title: Column(
             children: [
               Text(
-                title!,
+                title,
                 style: const TextStyle(
                   fontSize: 25,
                 ),
@@ -47,20 +99,7 @@ class Methods {
               const CustomDivider(),
             ],
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (image != null) Image.asset(image),
-              if (name != null)
-                Text(
-                  name,
-                  style: const TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w500,
-                  ),
-                )
-            ],
-          ),
+          content: content,
           actions: [
             GestureDetector(
               onTap: () => Navigator.of(context).pop(),

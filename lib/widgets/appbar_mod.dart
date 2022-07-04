@@ -14,6 +14,23 @@ class AppBarMod extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: Colors.black.withOpacity(0.1),
+      iconTheme: const IconThemeData(color: Colors.white60),
+      centerTitle: true,
+      elevation: 10,
+      title: Text(title,
+          style: const TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              color: Colors.white60)),
+      flexibleSpace: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+          child: Container(
+            color: Colors.white.withOpacity(0.1),
+          ),
+        ),
+      ),
       actions: [
         if (routeOnTap != null)
           Padding(
@@ -48,23 +65,6 @@ class AppBarMod extends StatelessWidget with PreferredSizeWidget {
             ),
           ),
       ],
-      backgroundColor: Colors.black.withOpacity(0.1),
-      iconTheme: const IconThemeData(color: Colors.white60),
-      centerTitle: true,
-      elevation: 10,
-      title: Text(title,
-          style: const TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              color: Colors.white60)),
-      flexibleSpace: ClipRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
-          child: Container(
-            color: Colors.white.withOpacity(0.1),
-          ),
-        ),
-      ),
     );
   }
 }

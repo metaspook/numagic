@@ -9,13 +9,13 @@ class AppBarController extends ChangeNotifier {
 
   List<bool> get checkboxList => _checkboxList;
   bool getCheckbox(int index) => _checkboxList[index];
+
   Future<void> setCheckbox(int index, bool value) async {
     _checkboxList[index] = value;
     notifyListeners();
   }
 
-  void resetCheckbox(BuildContext context) {
-    Navigator.pop(context);
+  void resetCheckbox() {
     _checkboxList = _initCheckboxList;
     notifyListeners();
   }

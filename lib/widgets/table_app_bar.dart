@@ -28,7 +28,7 @@ class TableAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       title: Builder(builder: (context) {
         return Text(
-          "Table No. ${context.watch<FoodTableController>().tableIndex + 1}",
+          "Table No. ${context.watch<TableController>().tableIndex + 1}",
           style: const TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
@@ -42,8 +42,7 @@ class TableAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: Transform.scale(
             scale: 1.5,
             child: Builder(builder: (context) {
-              final tableIndex =
-                  context.watch<FoodTableController>().tableIndex;
+              final tableIndex = context.watch<TableController>().tableIndex;
               return Checkbox(
                 side: const BorderSide(color: Colors.white60, width: 2),
                 activeColor: Colors.white60,
