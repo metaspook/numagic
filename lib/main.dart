@@ -16,9 +16,6 @@ void main() {
         ChangeNotifierProvider<TableController>(
           create: (_) => TableController(),
         ),
-        ChangeNotifierProvider<NumberTableController>(
-          create: (_) => NumberTableController(),
-        ),
       ],
       child: const NuMagicApp(),
     ),
