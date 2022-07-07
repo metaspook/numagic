@@ -11,6 +11,12 @@ class FloatingActionButtonBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    void resetTable() {
+      context.read<TableController>().reRandomizeFoodTables();
+      context.read<TableController>().setTableIndex(0);
+      context.read<AppBarController>().resetCheckbox();
+    }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -41,8 +47,7 @@ class FloatingActionButtonBar extends StatelessWidget {
               heroTag: null,
               backgroundColor: Colors.white24,
               onPressed: () {
-                context.read<TableController>().setTableIndex(0);
-                context.read<AppBarController>().resetCheckbox();
+                resetTable();
                 Navigator.pop(context);
               },
               child: const Icon(Icons.refresh),
@@ -50,8 +55,10 @@ class FloatingActionButtonBar extends StatelessWidget {
             FloatingActionButton(
               heroTag: null,
               backgroundColor: Colors.white24,
-              onPressed: () => Navigator.of(context)
-                  .popUntil((Route route) => route.isFirst),
+              onPressed: () {
+                resetTable();
+                Navigator.of(context).popUntil((Route route) => route.isFirst);
+              },
               child: const Icon(Icons.home),
             ),
           ],

@@ -14,6 +14,13 @@ class TableController extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Table randomization.
+  static List<Set<Set<int>>> get _randomizeFoodTables =>
+      Constants().foodTableSet..shuffle();
+  List<Set<Set<int>>> _foodTables = _randomizeFoodTables;
+  List<Set<Set<int>>> get foodTables => _foodTables;
+  void reRandomizeFoodTables() => _foodTables = _randomizeFoodTables;
+
   // Table submission.
   Future<void> submitFoodTable(
     BuildContext context, {
@@ -23,7 +30,7 @@ class TableController extends ChangeNotifier {
     int sum = 0;
     for (int i = 0; i < checkboxList.length; i++) {
       if (checkboxList[i] == true) {
-        sum += Constants().foodTableSet.elementAt(i).elementAt(0).elementAt(5);
+        sum += _foodTables.elementAt(i).elementAt(0).elementAt(5);
       }
     }
     if (sum == 0 || sum > foodList.length) {

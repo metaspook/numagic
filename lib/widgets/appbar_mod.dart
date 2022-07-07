@@ -48,10 +48,7 @@ class AppBarMod extends StatelessWidget with PreferredSizeWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const <Widget>[
-                  Icon(
-                    Icons.done_outline_rounded,
-                    size: 20,
-                  ),
+                  Icon(Icons.done_outline_rounded, size: 20),
                   Text(
                     'DONE',
                     style: TextStyle(

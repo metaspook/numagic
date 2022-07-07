@@ -36,13 +36,18 @@ class FoodTablePage extends StatelessWidget {
                         color: Colors.white60),
                     pagination: const SwiperPagination(
                       builder: DotSwiperPaginationBuilder(
-                          color: Colors.white30, activeColor: Colors.white),
+                        color: Colors.white30,
+                        activeColor: Colors.white,
+                      ),
                     ),
                     itemCount: Constants().foodTableSet.length,
                     itemBuilder: (context, index) {
                       return FoodTableWidget(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
-                        itemTable: Constants().foodTableSet.elementAt(index),
+                        itemTable: context
+                            .read<TableController>()
+                            .foodTables
+                            .elementAt(index),
                         itemList: snapshot.data!,
                       );
                     },
