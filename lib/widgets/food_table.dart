@@ -6,7 +6,7 @@ class FoodTableWidget extends StatelessWidget {
   const FoodTableWidget(
       {Key? key, required this.itemTable, required this.itemList, this.padding})
       : super(key: key);
-  final Set<Set<int>> itemTable;
+  final List<List<int>> itemTable;
   final List<Food> itemList;
   final EdgeInsetsGeometry? padding;
 

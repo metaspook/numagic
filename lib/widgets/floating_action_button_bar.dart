@@ -12,8 +12,7 @@ class FloatingActionButtonBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     void resetTable() {
-      context.read<TableController>().reRandomizeFoodTables();
-      context.read<TableController>().setTableIndex(0);
+      context.read<TableController>().resetTable();
       context.read<AppBarController>().resetCheckbox();
     }
 

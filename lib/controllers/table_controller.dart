@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:numagic/models/models.dart';
 import 'package:numagic/utils/utils.dart';
@@ -6,7 +8,7 @@ enum TableType { food, number }
 
 class TableController extends ChangeNotifier {
   // Table index related.
-  int _tableIndex = 0;
+  static int _tableIndex = 0;
   int get tableIndex => _tableIndex;
   Future<void> setTableIndex(int index) async {
     await Music().player.play(Music().audioClick);
@@ -14,12 +16,44 @@ class TableController extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Table randomization.
-  static List<Set<Set<int>>> get _randomizeFoodTables =>
-      Constants().foodTableSet..shuffle();
-  List<Set<Set<int>>> _foodTables = _randomizeFoodTables;
-  List<Set<Set<int>>> get foodTables => _foodTables;
-  void reRandomizeFoodTables() => _foodTables = _randomizeFoodTables;
+  // Tables randomization.
+  static bool _isReverseColumn = Random().nextBool();
+  static bool _isReverseRow = Random().nextBool();
+  static List<List<List<int>>> get _randomizeFoodTables {
+    List<List<List<int>>> randomFoodTables = Constants().foodTables..shuffle();
+    if (_isReverseColumn) {
+      randomFoodTables = [
+        ...randomFoodTables
+            .map<List<List<int>>>((column) => [...column.reversed])
+      ];
+    }
+    if (_isReverseRow) {
+      randomFoodTables = [
+        ...randomFoodTables.map<List<List<int>>>((column) => [
+              ...column.map<List<int>>((row) => [...row.reversed])
+            ])
+      ];
+    }
+    return randomFoodTables;
+  }
+
+  List<List<List<int>>> _foodTables = _randomizeFoodTables;
+  List<List<List<int>>> get foodTables => _foodTables;
+
+  void resetTable() {
+    _isReverseRow = Random().nextBool();
+    _isReverseColumn = Random().nextBool();
+    _foodTables = _randomizeFoodTables;
+    setTableIndex(0);
+  }
+
+  // Tables column randomization.
+
+  // final List<Set<int>> _reversedFoodColumn = [
+  //   ...Constants().foodTables[_tableIndex].reversed
+  // ];
+  // List<List<Set<int>>> get foodTables => _foodTables;
+  // void reRandomizeFoodTables() => _foodTables = _randomizeFoodTables;
 
   // Table submission.
   Future<void> submitFoodTable(
@@ -30,7 +64,10 @@ class TableController extends ChangeNotifier {
     int sum = 0;
     for (int i = 0; i < checkboxList.length; i++) {
       if (checkboxList[i] == true) {
-        sum += _foodTables.elementAt(i).elementAt(0).elementAt(5);
+        sum += _foodTables
+            .elementAt(i)
+            .elementAt(_isReverseColumn ? 4 : 0)
+            .elementAt(_isReverseRow ? 0 : 5);
       }
     }
     if (sum == 0 || sum > foodList.length) {
@@ -59,7 +96,7 @@ class TableController extends ChangeNotifier {
     int sum = 0;
     for (int i = 0; i < checkboxList.length; i++) {
       if (checkboxList[i] == true) {
-        sum += Constants().foodTableSet.elementAt(i).elementAt(0).elementAt(0);
+        sum += Constants().foodTables.elementAt(i).elementAt(0).elementAt(0);
       }
     }
     if (sum == 0 || sum > numberList.length) {

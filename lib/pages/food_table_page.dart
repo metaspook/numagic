@@ -40,7 +40,7 @@ class FoodTablePage extends StatelessWidget {
                         activeColor: Colors.white,
                       ),
                     ),
-                    itemCount: Constants().foodTableSet.length,
+                    itemCount: Constants().foodTables.length,
                     itemBuilder: (context, index) {
                       return FoodTableWidget(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
