@@ -12,7 +12,7 @@ class FloatingActionButtonBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     void resetTable() {
-      context.read<TableController>().resetTable();
+      context.read<TableController>().resetTable(tableType);
       context.read<AppBarController>().resetCheckbox();
     }
 
@@ -28,17 +28,22 @@ class FloatingActionButtonBar extends StatelessWidget {
               return FloatingActionButton(
                 heroTag: null,
                 backgroundColor: Colors.white24,
-                onPressed: () async => tableType == TableType.food
-                    ? context.read<TableController>().submitFoodTable(
-                          context,
-                          foodList: await DataService().fetchFoods(),
-                          checkboxList: checkboxList,
-                        )
-                    : context.read<TableController>().submitNumberTable(
-                          context,
-                          numberList: Methods().numberList,
-                          checkboxList: checkboxList,
-                        ),
+                onPressed: () async {
+                  switch (tableType) {
+                    case TableType.food:
+                      return context.read<TableController>().submitFoodTable(
+                            context,
+                            foodList: await DataService().fetchFoods(),
+                            checkboxList: checkboxList,
+                          );
+                    case TableType.number:
+                      return context.read<TableController>().submitNumberTable(
+                            context,
+                            numberList: Methods().numberList,
+                            checkboxList: checkboxList,
+                          );
+                  }
+                },
                 child: const Icon(Icons.done_outline_rounded),
               );
             }),

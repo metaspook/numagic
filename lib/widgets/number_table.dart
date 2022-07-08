@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:numagic/utils/methods.dart';
 
-class NumberTableWidget extends StatelessWidget {
-  const NumberTableWidget(
-      {Key? key, required this.itemTable, required this.itemList})
+class NumberTable extends StatelessWidget {
+  const NumberTable({Key? key, required this.itemTable, required this.itemList})
       : super(key: key);
   final Iterable<Iterable<int>> itemTable;
   final List itemList;

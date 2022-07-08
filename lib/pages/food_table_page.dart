@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:numagic/controllers/controllers.dart';
 import 'package:numagic/models/food.dart';
 import 'package:numagic/pages/services/data_service.dart';
-import 'package:numagic/utils/utils.dart';
 import 'package:numagic/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -26,10 +25,11 @@ class FoodTablePage extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.only(top: 125, bottom: 25),
                 child: Builder(builder: (context) {
+                  final tableController = context.read<TableController>();
                   return Swiper(
                     index: context.watch<TableController>().tableIndex,
                     onIndexChanged: (index) =>
-                        context.read<TableController>().setTableIndex(index),
+                        tableController.setTableIndex(index),
                     control: const SwiperControl(
                         padding: EdgeInsets.only(left: 10),
                         size: 40,
@@ -40,14 +40,11 @@ class FoodTablePage extends StatelessWidget {
                         activeColor: Colors.white,
                       ),
                     ),
-                    itemCount: Constants().foodTables.length,
+                    itemCount: tableController.foodTables.length,
                     itemBuilder: (context, index) {
-                      return FoodTableWidget(
+                      return FoodTable(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
-                        itemTable: context
-                            .read<TableController>()
-                            .foodTables
-                            .elementAt(index),
+                        itemTable: tableController.foodTables.elementAt(index),
                         itemList: snapshot.data!,
                       );
                     },

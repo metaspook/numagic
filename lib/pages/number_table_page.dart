@@ -24,10 +24,11 @@ class NumberTablePage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Builder(builder: (context) {
+                  final tableController = context.read<TableController>();
                   return Swiper(
                     index: context.watch<TableController>().tableIndex,
                     onIndexChanged: (index) =>
-                        context.read<TableController>().setTableIndex(index),
+                        tableController.setTableIndex(index),
                     control: const SwiperControl(
                         padding: EdgeInsets.only(left: 10),
                         size: 40,
@@ -36,14 +37,14 @@ class NumberTablePage extends StatelessWidget {
                       builder: DotSwiperPaginationBuilder(
                           color: Colors.white30, activeColor: Colors.white),
                     ),
-                    itemCount: Constants().numberTableSet.length,
+                    itemCount: tableController.numberTables.length,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 50),
-                        child: NumberTableWidget(
+                        child: NumberTable(
                           itemTable:
-                              Constants().numberTableSet.elementAt(index),
+                              tableController.numberTables.elementAt(index),
                           itemList: Methods().numberList,
                         ),
                       );

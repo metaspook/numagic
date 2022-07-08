@@ -16,46 +16,63 @@ class TableController extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Tables randomization.
+  // Tables reversing.
   static bool _isReverseColumn = Random().nextBool();
   static bool _isReverseRow = Random().nextBool();
-  static List<List<List<int>>> get _randomizeFoodTables {
-    List<List<List<int>>> randomFoodTables = Constants().foodTables..shuffle();
+
+  // Tables randomizer.
+  static List<List<List<int>>> _tablesRandomizer({
+    required List<List<List<int>>> tables,
+    required bool isReverseColumn,
+    required bool isReverseRow,
+  }) {
+    List<List<List<int>>> randomTables = tables..shuffle();
     if (_isReverseColumn) {
-      randomFoodTables = [
-        ...randomFoodTables
-            .map<List<List<int>>>((column) => [...column.reversed])
+      randomTables = [
+        ...randomTables.map<List<List<int>>>((column) => [...column.reversed])
       ];
     }
     if (_isReverseRow) {
-      randomFoodTables = [
-        ...randomFoodTables.map<List<List<int>>>((column) => [
+      randomTables = [
+        ...randomTables.map<List<List<int>>>((column) => [
               ...column.map<List<int>>((row) => [...row.reversed])
             ])
       ];
     }
-    return randomFoodTables;
+    return randomTables;
   }
 
-  List<List<List<int>>> _foodTables = _randomizeFoodTables;
-  List<List<List<int>>> get foodTables => _foodTables;
-
-  void resetTable() {
+  // Tables resetting.
+  void resetTable(TableType tableType) {
     _isReverseRow = Random().nextBool();
     _isReverseColumn = Random().nextBool();
-    _foodTables = _randomizeFoodTables;
+    switch (tableType) {
+      case TableType.food:
+        _foodTables = _tablesRandomizer(
+          tables: Constants().foodTables,
+          isReverseColumn: _isReverseColumn,
+          isReverseRow: _isReverseRow,
+        );
+        break;
+      case TableType.number:
+        _numberTables = _tablesRandomizer(
+          tables: Constants().numberTables,
+          isReverseColumn: _isReverseColumn,
+          isReverseRow: _isReverseRow,
+        );
+        break;
+    }
     setTableIndex(0);
   }
 
-  // Tables column randomization.
+  // Food table related.
+  List<List<List<int>>> _foodTables = _tablesRandomizer(
+    tables: Constants().foodTables,
+    isReverseColumn: _isReverseColumn,
+    isReverseRow: _isReverseRow,
+  );
+  List<List<List<int>>> get foodTables => _foodTables;
 
-  // final List<Set<int>> _reversedFoodColumn = [
-  //   ...Constants().foodTables[_tableIndex].reversed
-  // ];
-  // List<List<Set<int>>> get foodTables => _foodTables;
-  // void reRandomizeFoodTables() => _foodTables = _randomizeFoodTables;
-
-  // Table submission.
   Future<void> submitFoodTable(
     BuildContext context, {
     required List<Food> foodList,
@@ -87,6 +104,14 @@ class TableController extends ChangeNotifier {
       await Music().player.play(Music().audioSuccess);
     }
   }
+
+  // Number table related.
+  List<List<List<int>>> _numberTables = _tablesRandomizer(
+    tables: Constants().numberTables,
+    isReverseColumn: _isReverseColumn,
+    isReverseRow: _isReverseRow,
+  );
+  List<List<List<int>>> get numberTables => _numberTables;
 
   Future<void> submitNumberTable(
     BuildContext context, {

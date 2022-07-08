@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:numagic/models/models.dart';
 import 'package:numagic/widgets/widgets.dart';
 
-class FoodTableWidget extends StatelessWidget {
-  const FoodTableWidget(
+class FoodTable extends StatelessWidget {
+  const FoodTable(
       {Key? key, required this.itemTable, required this.itemList, this.padding})
       : super(key: key);
   final List<List<int>> itemTable;
