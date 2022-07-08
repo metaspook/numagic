@@ -4,7 +4,7 @@ import 'package:numagic/widgets/widgets.dart';
 class NumberTable extends StatelessWidget {
   const NumberTable({Key? key, required this.itemTable, required this.itemList})
       : super(key: key);
-  final Iterable<Iterable<int>> itemTable;
+  final List<List<int>> itemTable;
   final List itemList;
 
   @override
