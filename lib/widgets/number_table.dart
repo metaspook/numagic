@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:numagic/utils/methods.dart';
+import 'package:numagic/widgets/widgets.dart';
 
 class NumberTable extends StatelessWidget {
   const NumberTable({Key? key, required this.itemTable, required this.itemList})
@@ -15,35 +15,12 @@ class NumberTable extends StatelessWidget {
           TableRow(
             children: <Widget>[
               for (var j = 0; j < itemTable.elementAt(i).length; j++)
-                _numberTableCell(
-                  name: itemList[itemTable.elementAt(i).elementAt(j) - 1],
+                NumberCell(
+                  number: itemList[itemTable.elementAt(i).elementAt(j) - 1],
                 )
             ],
           ),
       ],
-    );
-  }
-
-  _numberTableCell({required int name}) {
-    return Container(
-      margin: const EdgeInsets.all(3),
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: Colors.black26,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      alignment: Alignment.center,
-      child: FittedBox(
-        child: Text(
-          "$name",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Methods().colorPrimariesRandom(),
-            fontSize: 35,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
     );
   }
 }
