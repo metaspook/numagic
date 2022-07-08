@@ -26,20 +26,16 @@ class TableController extends ChangeNotifier {
     required bool isReverseColumn,
     required bool isReverseRow,
   }) {
-    List<List<List<int>>> randomTables = tables..shuffle();
-    if (_isReverseColumn) {
-      randomTables = [
-        ...randomTables.map<List<List<int>>>((column) => [...column.reversed])
-      ];
-    }
-    if (_isReverseRow) {
-      randomTables = [
-        ...randomTables.map<List<List<int>>>((column) => [
-              ...column.map<List<int>>((row) => [...row.reversed])
-            ])
-      ];
-    }
-    return randomTables;
+    return tables.map<List<List<int>>>((column) {
+      if (_isReverseColumn) column = column.reversed.toList(growable: false);
+      if (_isReverseRow) {
+        column = column
+            .map<List<int>>((row) => row.reversed.toList(growable: false))
+            .toList(growable: false);
+      }
+      return column;
+    }).toList(growable: false)
+      ..shuffle();
   }
 
   // Tables resetting.
@@ -121,7 +117,10 @@ class TableController extends ChangeNotifier {
     int sum = 0;
     for (int i = 0; i < checkboxList.length; i++) {
       if (checkboxList[i] == true) {
-        sum += Constants().foodTables.elementAt(i).elementAt(0).elementAt(0);
+        sum += _numberTables
+            .elementAt(i)
+            .elementAt(_isReverseColumn ? 3 : 0)
+            .elementAt(_isReverseRow ? 7 : 0);
       }
     }
     if (sum == 0 || sum > numberList.length) {
