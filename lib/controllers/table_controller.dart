@@ -17,8 +17,10 @@ class TableController extends ChangeNotifier {
   }
 
   // Tables reversing.
-  static bool _isReverseColumn = Random().nextBool();
-  static bool _isReverseRow = Random().nextBool();
+  static bool _isReverseFoodColumn = Random().nextBool();
+  static bool _isReverseFoodRow = Random().nextBool();
+  static bool _isReverseNumberColumn = Random().nextBool();
+  static bool _isReverseNumberRow = Random().nextBool();
 
   // Tables randomizer.
   static List<List<List<int>>> _tablesRandomizer({
@@ -27,8 +29,8 @@ class TableController extends ChangeNotifier {
     required bool isReverseRow,
   }) {
     return tables.map<List<List<int>>>((column) {
-      if (_isReverseColumn) column = column.reversed.toList(growable: false);
-      if (_isReverseRow) {
+      if (isReverseColumn) column = column.reversed.toList(growable: false);
+      if (isReverseRow) {
         column = column
             .map<List<int>>((row) => row.reversed.toList(growable: false))
             .toList(growable: false);
@@ -38,34 +40,11 @@ class TableController extends ChangeNotifier {
       ..shuffle();
   }
 
-  // Tables resetting.
-  void resetTable(TableType tableType) {
-    _isReverseRow = Random().nextBool();
-    _isReverseColumn = Random().nextBool();
-    switch (tableType) {
-      case TableType.food:
-        _foodTables = _tablesRandomizer(
-          tables: Constants().foodTables,
-          isReverseColumn: _isReverseColumn,
-          isReverseRow: _isReverseRow,
-        );
-        break;
-      case TableType.number:
-        _numberTables = _tablesRandomizer(
-          tables: Constants().numberTables,
-          isReverseColumn: _isReverseColumn,
-          isReverseRow: _isReverseRow,
-        );
-        break;
-    }
-    setTableIndex(0);
-  }
-
   // Food table related.
   List<List<List<int>>> _foodTables = _tablesRandomizer(
     tables: Constants().foodTables,
-    isReverseColumn: _isReverseColumn,
-    isReverseRow: _isReverseRow,
+    isReverseColumn: _isReverseFoodColumn,
+    isReverseRow: _isReverseFoodRow,
   );
   List<List<List<int>>> get foodTables => _foodTables;
 
@@ -79,8 +58,8 @@ class TableController extends ChangeNotifier {
       if (checkboxList[i] == true) {
         sum += _foodTables
             .elementAt(i)
-            .elementAt(_isReverseColumn ? 4 : 0)
-            .elementAt(_isReverseRow ? 0 : 5);
+            .elementAt(_isReverseFoodColumn ? 4 : 0)
+            .elementAt(_isReverseFoodRow ? 0 : 5);
       }
     }
     if (sum == 0 || sum > foodList.length) {
@@ -104,8 +83,8 @@ class TableController extends ChangeNotifier {
   // Number table related.
   List<List<List<int>>> _numberTables = _tablesRandomizer(
     tables: Constants().numberTables,
-    isReverseColumn: _isReverseColumn,
-    isReverseRow: _isReverseRow,
+    isReverseColumn: _isReverseNumberColumn,
+    isReverseRow: _isReverseNumberRow,
   );
   List<List<List<int>>> get numberTables => _numberTables;
 
@@ -119,8 +98,8 @@ class TableController extends ChangeNotifier {
       if (checkboxList[i] == true) {
         sum += _numberTables
             .elementAt(i)
-            .elementAt(_isReverseColumn ? 3 : 0)
-            .elementAt(_isReverseRow ? 7 : 0);
+            .elementAt(_isReverseNumberColumn ? 3 : 0)
+            .elementAt(_isReverseNumberRow ? 7 : 0);
       }
     }
     if (sum == 0 || sum > numberList.length) {
@@ -138,5 +117,30 @@ class TableController extends ChangeNotifier {
       );
       await Music().player.play(Music().audioSuccess);
     }
+  }
+
+  // Tables resetting.
+  void resetTable(TableType tableType) {
+    switch (tableType) {
+      case TableType.food:
+        _isReverseFoodColumn = Random().nextBool();
+        _isReverseFoodRow = Random().nextBool();
+        _foodTables = _tablesRandomizer(
+          tables: Constants().foodTables,
+          isReverseColumn: _isReverseFoodColumn,
+          isReverseRow: _isReverseFoodRow,
+        );
+        break;
+      case TableType.number:
+        _isReverseNumberColumn = Random().nextBool();
+        _isReverseNumberRow = Random().nextBool();
+        _numberTables = _tablesRandomizer(
+          tables: Constants().numberTables,
+          isReverseColumn: _isReverseNumberColumn,
+          isReverseRow: _isReverseNumberRow,
+        );
+        break;
+    }
+    setTableIndex(0);
   }
 }
