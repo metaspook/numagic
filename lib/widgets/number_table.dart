@@ -15,9 +15,7 @@ class NumberTable extends StatelessWidget {
           TableRow(
             children: <Widget>[
               for (var j = 0; j < itemTable.elementAt(i).length; j++)
-                NumberCell(
-                  number: itemList[itemTable.elementAt(i).elementAt(j) - 1],
-                )
+                NumberCell(itemList[itemTable.elementAt(i).elementAt(j) - 1])
             ],
           ),
       ],

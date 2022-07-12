@@ -2,29 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:numagic/utils/utils.dart';
 
 class NumberCell extends StatelessWidget {
-  const NumberCell({Key? key, required this.number}) : super(key: key);
+  const NumberCell(this.number, {Key? key}) : super(key: key);
 
   final int number;
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Container(
-      margin: const EdgeInsets.all(3),
-      padding: const EdgeInsets.all(4),
+      margin: EdgeInsets.all(size.shortestSide * 0.0125),
+      padding: EdgeInsets.symmetric(
+        vertical: size.shortestSide * 0.015,
+      ),
       decoration: BoxDecoration(
         color: Colors.black26,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(size.shortestSide * 0.0125),
       ),
       alignment: Alignment.center,
-      child: FittedBox(
-        child: Text(
-          number.toString(),
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Methods().colorPrimariesRandom(),
-            fontSize: 35,
-            fontWeight: FontWeight.bold,
-          ),
+      child: Text(
+        number.toString(),
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Methods().colorPrimariesRandom(),
+          fontSize: size.longestSide * 0.035,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
