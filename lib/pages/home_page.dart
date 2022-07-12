@@ -23,13 +23,16 @@ class _HomePageState extends State<HomePage> {
               horizontal: 7,
               vertical: 12,
             ),
-            child: ListView(
-              children: const [
-                HowToPlay(),
-                GridButtonBar(),
-                SizedBox(height: 125),
-                AboutButton()
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                children: const [
+                  SizedBox(height: kToolbarHeight * 1.75),
+                  HowToPlay(),
+                  GridButtonBar(),
+                  SizedBox(height: 125),
+                  AboutButton()
+                ],
+              ),
             ),
           ),
         ),

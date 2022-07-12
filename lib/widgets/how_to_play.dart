@@ -5,7 +5,8 @@ class HowToPlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final longestSide = MediaQuery.of(context).size.shortestSide;
+    // final orientation = MediaQuery.of(context).orientation;
     return Container(
       padding: const EdgeInsets.all(15),
       margin: const EdgeInsets.only(bottom: 80),
@@ -17,16 +18,16 @@ class HowToPlay extends StatelessWidget {
         """
  How To Play:
  ------------
- 1. Select grid type and Keep secret
-    a Food or Number, Press DONE.
- 2. Select all the tables containing
-    your secret Food or Number.
+ 1. Tell a person to keep secret a Food
+    or Number from a grid then Press DONE.
+ 2. Just ask him/her which tables containing the
+    secret Food or Number then check all of those.
  3. Press ✓, I'll show the MAGIC 🪄""",
         style: TextStyle(
-          color: Colors.white70,
-          fontSize: size.width * 0.04475,
+          color: Colors.white.withOpacity(.45),
+          fontSize: longestSide * 0.04,
           fontFamily: 'Consolas',
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );

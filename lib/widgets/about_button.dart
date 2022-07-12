@@ -21,7 +21,7 @@ class AboutButton extends StatelessWidget {
                 SizedBox(width: 10),
                 Text(
                   'About',
-                  style: TextStyle(color: Colors.white70, fontSize: 20),
+                  style: TextStyle(color: Colors.white60, fontSize: 20),
                 ),
               ],
             )
@@ -30,7 +30,7 @@ class AboutButton extends StatelessWidget {
 Made with  ❤️  from  🇧🇩
 Copyright © 2022, Metaspook""",
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white70, fontSize: 20),
+              style: TextStyle(color: Colors.white60, fontSize: 20),
             ),
     );
   }

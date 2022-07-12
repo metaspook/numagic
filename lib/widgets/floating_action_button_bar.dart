@@ -11,8 +11,10 @@ class FloatingActionButtonBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    final tableController = context.read<TableController>();
+    final checkboxList = context.watch<AppBarController>().checkboxList;
     void resetTable() {
-      context.read<TableController>().resetTable(tableType);
+      tableController.resetTable(tableType);
       context.read<AppBarController>().resetCheckbox();
     }
 
@@ -22,40 +24,6 @@ class FloatingActionButtonBar extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Builder(builder: (context) {
-              final checkboxList =
-                  context.watch<AppBarController>().checkboxList;
-              return FloatingActionButton(
-                heroTag: null,
-                backgroundColor: Colors.white24,
-                onPressed: () async {
-                  switch (tableType) {
-                    case TableType.food:
-                      return context.read<TableController>().submitFoodTable(
-                            context,
-                            foodList: await DataService().fetchFoods(),
-                            checkboxList: checkboxList,
-                          );
-                    case TableType.number:
-                      return context.read<TableController>().submitNumberTable(
-                            context,
-                            numberList: Methods().numberList,
-                            checkboxList: checkboxList,
-                          );
-                  }
-                },
-                child: const Icon(Icons.done_outline_rounded),
-              );
-            }),
-            FloatingActionButton(
-              heroTag: null,
-              backgroundColor: Colors.white24,
-              onPressed: () {
-                resetTable();
-                Navigator.pop(context);
-              },
-              child: const Icon(Icons.refresh),
-            ),
             FloatingActionButton(
               heroTag: null,
               backgroundColor: Colors.white24,
@@ -64,6 +32,37 @@ class FloatingActionButtonBar extends StatelessWidget {
                 Navigator.of(context).popUntil((Route route) => route.isFirst);
               },
               child: const Icon(Icons.home),
+            ),
+            if (checkboxList.contains(true))
+              FloatingActionButton.extended(
+                label: const Text('🪄', style: TextStyle(fontSize: 35)),
+                heroTag: null,
+                backgroundColor: Colors.white12,
+                onPressed: () async {
+                  switch (tableType) {
+                    case TableType.food:
+                      return tableController.submitFoodTable(
+                        context,
+                        foodList: await DataService().fetchFoods(),
+                        checkboxList: checkboxList,
+                      );
+                    case TableType.number:
+                      return tableController.submitNumberTable(
+                        context,
+                        numberList: Methods().numberList,
+                        checkboxList: checkboxList,
+                      );
+                  }
+                },
+              ),
+            FloatingActionButton(
+              heroTag: null,
+              backgroundColor: Colors.white24,
+              onPressed: () {
+                resetTable();
+                Navigator.pop(context);
+              },
+              child: const Icon(Icons.refresh),
             ),
           ],
         ),
