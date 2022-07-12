@@ -112,7 +112,7 @@ class TableController extends ChangeNotifier {
     } else {
       Methods().dialogNumberTable(
         context,
-        title: '🪄 Secret Food 🪄',
+        title: '🪄 Secret Number 🪄',
         number: numberList[sum - 1].toString(),
       );
       await Music().player.play(Music().audioSuccess);
