@@ -7,30 +7,35 @@ class AboutButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final longestSide = MediaQuery.of(context).size.longestSide;
+
     return GestureDetector(
       onTap: () => context.read<HomeController>().setAboutState(),
       child: context.watch<HomeController>().getAboutState
           ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
               // crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
+              children: [
                 Icon(
                   Icons.info_outlined,
                   color: Colors.white60,
+                  size: longestSide * 0.025,
                 ),
-                SizedBox(width: 10),
+                SizedBox(width: longestSide * 0.010),
                 Text(
                   'About',
-                  style: TextStyle(color: Colors.white60, fontSize: 20),
+                  style: TextStyle(
+                      color: Colors.white60, fontSize: longestSide * 0.020),
                 ),
               ],
             )
-          : const Text(
+          : Text(
               """
 Made with  ❤️  from  🇧🇩
 Copyright © 2022, Metaspook""",
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white60, fontSize: 20),
+              style: TextStyle(
+                  color: Colors.white60, fontSize: longestSide * 0.020),
             ),
     );
   }

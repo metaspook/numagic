@@ -11,6 +11,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    final shortestSide = MediaQuery.of(context).size.shortestSide;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBarMod(title: 'NuMagic 🪄'),
@@ -25,12 +26,12 @@ class _HomePageState extends State<HomePage> {
             ),
             child: SingleChildScrollView(
               child: Column(
-                children: const [
-                  SizedBox(height: kToolbarHeight * 1.75),
-                  HowToPlay(),
-                  GridButtonBar(),
-                  SizedBox(height: 125),
-                  AboutButton()
+                children: [
+                  const SizedBox(height: kToolbarHeight * 1.5),
+                  const HowToPlay(),
+                  const GridButtonBar(),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+                  const AboutButton(),
                 ],
               ),
             ),

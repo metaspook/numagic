@@ -9,51 +9,57 @@ class GridButtonBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gridPageRoute = context.read<HomeController>().gridPageRoute;
+    final size = MediaQuery.of(context).size;
+
     return Column(
       children: [
-        const Text(
+        Text(
           'Grid Type',
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.white12,
-            fontSize: 80,
+            fontSize: size.shortestSide * 0.125,
             fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 20),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.black12, width: 10),
+                border: Border.all(
+                    color: Colors.black12, width: size.shortestSide * 0.0225),
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20)),
               ),
               child: TextButton(
                 onPressed: () => gridPageRoute(context, const NumberGridPage()),
-                child: const Text(
+                child: Text(
                   'Number',
-                  style: TextStyle(color: Colors.white54, fontSize: 40),
+                  style: TextStyle(
+                      color: Colors.white54,
+                      fontSize: size.shortestSide * 0.075),
                 ),
               ),
             ),
-            const SizedBox(width: 15),
+            SizedBox(width: size.width * 0.135),
             Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.black12, width: 10),
+                border: Border.all(
+                    color: Colors.black12, width: size.shortestSide * 0.0225),
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20)),
               ),
               child: TextButton(
                 onPressed: () => gridPageRoute(context, const FoodGridPage()),
-                child: const Text(
+                child: Text(
                   'Food',
                   style: TextStyle(
                     color: Colors.white54,
-                    fontSize: 40,
+                    fontSize: size.shortestSide * 0.075,
                   ),
                 ),
               ),
