@@ -11,7 +11,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    final shortestSide = MediaQuery.of(context).size.shortestSide;
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBarMod(title: 'NuMagic 🪄'),
@@ -30,7 +30,10 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: kToolbarHeight * 1.5),
                   const HowToPlay(),
                   const GridButtonBar(),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+                  SizedBox(
+                    height: size.shortestSide *
+                        (size.height == size.shortestSide ? 0.065 : 0.45),
+                  ),
                   const AboutButton(),
                 ],
               ),

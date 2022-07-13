@@ -9,6 +9,7 @@ class FoodGridPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final shortestSide = MediaQuery.of(context).size.shortestSide;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBarMod(
@@ -28,14 +29,13 @@ class FoodGridPage extends StatelessWidget {
                 snapshot.data!.shuffle();
                 return GridView.builder(
                     physics: const BouncingScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 5,
+                      childAspectRatio: shortestSide * 0.00205,
                     ),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       return FoodCell(
-                        flex: 1,
                         name: snapshot.data![index].name,
                         image: snapshot.data![index].image,
                       );

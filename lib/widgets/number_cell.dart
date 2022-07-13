@@ -12,7 +12,7 @@ class NumberCell extends StatelessWidget {
     return Container(
       margin: EdgeInsets.all(size.shortestSide * 0.0125),
       padding: EdgeInsets.symmetric(
-        vertical: size.shortestSide * 0.015,
+        vertical: size.shortestSide * 0.0125,
       ),
       decoration: BoxDecoration(
         color: Colors.black26,
@@ -24,7 +24,7 @@ class NumberCell extends StatelessWidget {
         textAlign: TextAlign.center,
         style: TextStyle(
           color: Methods().colorPrimariesRandom(),
-          fontSize: size.longestSide * 0.035,
+          fontSize: size.longestSide * 0.0325,
           fontWeight: FontWeight.bold,
         ),
       ),

@@ -10,7 +10,7 @@ class HowToPlay extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
           horizontal: size.longestSide * 0.0175, vertical: 15),
-      margin: EdgeInsets.only(bottom: size.height * 0.03),
+      margin: EdgeInsets.only(bottom: size.height * 0.01),
       decoration: BoxDecoration(
         color: Colors.black26,
         borderRadius: BorderRadius.circular(size.longestSide * 0.015),
@@ -19,12 +19,12 @@ class HowToPlay extends StatelessWidget {
         """
 How To Play:
 ------------
-☑️ Tell a person to keep secret a Food
+1.Tell a person to keep secret a Food
   or Number from a grid then Press DONE.
-☑️ Just ask him/her which tables contain
+2.Just ask him/her which tables contain
   the secret Food or Number then check
   all of those.
-☑️ Press 🪄 button to reveal the secret.""",
+3.Press 🪄 button to reveal the secret.""",
         // textScaleFactor: longestSide * 0.00285,
         style: TextStyle(
           color: Colors.white.withOpacity(.45),
