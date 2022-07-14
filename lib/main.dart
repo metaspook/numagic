@@ -4,6 +4,9 @@ import 'package:numagic/nu_magic_app.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  // set current year.
+  // Constants().currentYear = DateTime.now().year;
+
   runApp(
     MultiProvider(
       providers: [

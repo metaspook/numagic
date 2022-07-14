@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:numagic/controllers/home_controller.dart';
+import 'package:numagic/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class AboutButton extends StatelessWidget {
@@ -8,9 +9,14 @@ class AboutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final longestSide = MediaQuery.of(context).size.longestSide;
-
+    final homeController = context.read<HomeController>();
+    final TextStyle primaryTextStyle = TextStyle(
+      color: Colors.white60,
+      fontSize: longestSide * 0.0225,
+      fontWeight: FontWeight.w500,
+    );
     return GestureDetector(
-      onTap: () => context.read<HomeController>().setAboutState(),
+      onTap: () => homeController.setAboutState(),
       child: context.watch<HomeController>().getAboutState
           ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -29,13 +35,28 @@ class AboutButton extends StatelessWidget {
                 ),
               ],
             )
-          : Text(
-              """
-Made with  ❤️  from  🇧🇩
-Copyright © 2022, Metaspook""",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.white60, fontSize: longestSide * 0.025),
+          : Column(
+              children: [
+                Text(
+                  "${Constants().appVersion} 👨‍💻 Made with 🧠 & ❤️",
+                  textAlign: TextAlign.center,
+                  style: primaryTextStyle,
+                ),
+                Text(
+                  "\"Not that simple as it seems, it's a Magic of math and programming.\"",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white60,
+                    fontSize: longestSide * 0.02,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                Text(
+                  "Copyright © ${homeController.currentYearLine}, Metaspook",
+                  textAlign: TextAlign.center,
+                  style: primaryTextStyle,
+                ),
+              ],
             ),
     );
   }

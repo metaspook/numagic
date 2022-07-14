@@ -4,6 +4,7 @@ class Constants {
   Constants._();
   factory Constants() => Constants._();
 
+  final appVersion = 'v1.0.0';
   final colors = const <MaterialColor>[
     // Activated 15 10 9 8 7 6 5 1 0 looks better.
     Colors.red,
