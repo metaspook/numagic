@@ -20,7 +20,6 @@ class AboutButton extends StatelessWidget {
       child: context.watch<HomeController>().getAboutState
           ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Icon(
                   Icons.info_outlined,
@@ -43,7 +42,7 @@ class AboutButton extends StatelessWidget {
                   style: primaryTextStyle,
                 ),
                 Text(
-                  "\"Not that simple as it seems, it's a Magic of math and programming.\"",
+                  "\"Not that simple as it seems, it's a Magic\nof math and programming.\"",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white60,
