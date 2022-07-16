@@ -8,7 +8,7 @@ class NuMagicApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'NuMagic',
+      title: 'NuMagic: Secret Revealer Magic',
       home: HomePage(),
     );
   }
